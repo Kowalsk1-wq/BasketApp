@@ -4,14 +4,14 @@ Share images in real time, join the community and do good to the environment!
 
 ## Features
 
-* [ ] JWT Auth
-  * [ ] Cadastro de Usuário
-  * [ ] Confirmação do Email do Usuário (Ativação) 
-  * [ ] Login de Usuário
-  * [ ] Listagem de Usuários (excluindo o usuário vigente)
-  * [ ] Atualização de Dados Cadastrais do Usuário
-  * [ ] LogOut do Usuário
-  * [ ] Remoção da Conta do Usuário
+* [x] JWT Auth
+  * [x] Cadastro de Usuário
+  * [x] Confirmação do Email do Usuário (Ativação) 
+  * [x] Login de Usuário
+  * [x] Listagem de Usuários (excluindo o usuário vigente)
+  * [x] Atualização de Dados Cadastrais do Usuário
+  * [x] LogOut do Usuário
+  * [x] Remoção da Conta do Usuário
 * [ ] Visualizar um Mapa com sua localização atual (em tempo real)
   * [ ] Interação entre Usuários em um Mapa - Com Organização em ChatRooms
 * [ ] Live Chat
