@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import ReactMapGL from 'react-map-gl';
 
 import useLocation from '../utils/useLocation';
-
 import UI from './MapUI/index';
 
 // const userLocation = JSON.parse(localStorage.getItem('location'));
