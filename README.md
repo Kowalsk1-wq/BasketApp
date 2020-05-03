@@ -16,6 +16,10 @@ Share images in real time, join the community and do good to the environment!
   * [ ] Interação entre Usuários em um Mapa - Com Organização em ChatRooms
 * [ ] Live Chat
   * [ ] Quando a tarefa que estiver no EnvPoint for concluida, o prêmio proposto será divido entre os Usuários da ChatRoom.
+* [ ] Interação entre Usuários (Social Network Feature)
+  * [ ] Usuário pode fazer amizades, seguir e conversar com outros usuários
+  * [ ] Usuário Pode publicar alguma postagem sobre o que ele realizou para o meio ambiente
+  * Usuários podem Curtir as postagens e fazer comentários
 
 ## Config
 
@@ -24,7 +28,6 @@ Share images in real time, join the community and do good to the environment!
 * Update client/.env with your mapbox token
 
 #### Server
-* Create a google client id and secret [here](https://console.developers.google.com/)
 * Update server/.env with your google client id and secret
 
 ## Setup / Run
@@ -52,17 +55,22 @@ npm start
 * [Express](http://expressjs.com/)
 * [Knex.js](http://knexjs.org/)
   * A "batteries included" SQL query builder for Postgres, MSSQL, MySQL, MariaDB, SQLite3, Oracle, and Amazon Redshift designed to be flexible, portable, and fun to use
-* [socket.io](https://socket.io/)
+* [Socket.io](https://socket.io/)
   * Realtime server events
+* [Multer](https://github.com/expressjs/multer)
+  * Node.js middleware for handling multipart/form-data.
+* [Sharp](https://sharp.pixelplumbing.com/)
+  * High performance Node.js image processing
 
 #### Front-end
+
+
+##### Web
+
 * [React](https://reactjs.org/)
 * [socket.io-client](https://github.com/socketio/socket.io-client)
   * Realtime client
-* [reactn](https://github.com/CharlesStover/reactn)
-  * React, but with built-in global state management.
-* [figbird](https://humaans.github.io/figbird/)
-  * Declarative data fetching for Feathers and React
-* [react-map-gl](https://uber.github.io/react-map-gl/#/)
-  * React components for Mapbox GL JS
-* [react-bootstrap](https://react-bootstrap.github.io) with [bootswatch](https://bootswatch.com/) [lux theme](https://bootswatch.com/lux/)
+
+
+##### Mobile
+* [Xamarin/C#](https://dotnet.microsoft.com/apps/xamarin)

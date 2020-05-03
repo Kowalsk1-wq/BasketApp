@@ -13,20 +13,17 @@ module.exports = {
     useNullAsDefault: true
   },
 
-  staging: {
+  test: {
     client: 'postgresql',
     connection: {
-      database: 'my_db',
-      user:     'username',
+      database: 'envx',
+      user:     'postgres',
       password: 'password'
     },
-    pool: {
-      min: 2,
-      max: 10
-    },
     migrations: {
-      tableName: 'knex_migrations'
-    }
+      directory: './src/database/migrations'
+    },
+    useNullAsDefault: true
   },
 
   production: {
