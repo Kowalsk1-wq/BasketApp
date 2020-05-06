@@ -13,10 +13,15 @@ Doe Cestas Básicas, Faça a Diferença, Salve Vidas!
   * [x] LogOut do Usuário
   * [x] Remoção da Conta do Usuário
 
+* [ ] Criação, Remoção, Validação e Atualização de Requests por parte das ONGs
+* [ ] Doações referentes aos itens de cada Request feita pelos Usuários Cadastrados
+* [ ] Live-Chat Para que os Usuários troquem informações com a ONG acerca de sua Doação
+* [ ] ONG deve verificar as doações e fechar os Pacotes.
+* [ ] em resposta as Requests das ONGs, Os Usuários deve criar Receituários Contendo os itens que eles (Usuários) vão doar para as ONGs.
+
 ## Config
 
 #### Client
-* Create a mapbox token [here](https://www.mapbox.com)
 * Update client/.env with your mapbox token
 
 #### Server
@@ -37,7 +42,7 @@ npm run dev
 ```sh
 cd client
 npm install
-npm start
+quasar dev
 ```
 
 ## Stack
@@ -59,10 +64,7 @@ npm start
 
 ##### Web
 
-* [React](https://reactjs.org/)
+* [Vue.JS](https://vuejs.org/)
+* [Quasar](https://quasar.dev/)
 * [socket.io-client](https://github.com/socketio/socket.io-client)
   * Realtime client
-
-
-##### Mobile
-* [Xamarin/C#](https://dotnet.microsoft.com/apps/xamarin)
