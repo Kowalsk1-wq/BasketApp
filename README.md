@@ -1,25 +1,17 @@
-# EnvX
+# BasketApp
 
-Share images in real time, join the community and do good to the environment!
+Doe Cestas Básicas, Faça a Diferença, Salve Vidas!
 
 ## Features
 
 * [x] JWT Auth
-  * [x] Cadastro de Usuário
+  * [x] Cadastro de Usuário / ONG
   * [x] Confirmação do Email do Usuário (Ativação) 
-  * [x] Login de Usuário
+  * [x] Login de Usuário / ONG
   * [x] Listagem de Usuários (excluindo o usuário vigente)
   * [x] Atualização de Dados Cadastrais do Usuário
   * [x] LogOut do Usuário
   * [x] Remoção da Conta do Usuário
-* [ ] Visualizar um Mapa com sua localização atual (em tempo real)
-  * [ ] Interação entre Usuários em um Mapa - Com Organização em ChatRooms
-* [ ] Live Chat
-  * [ ] Quando a tarefa que estiver no EnvPoint for concluida, o prêmio proposto será divido entre os Usuários da ChatRoom.
-* [ ] Interação entre Usuários (Social Network Feature)
-  * [ ] Usuário pode fazer amizades, seguir e conversar com outros usuários
-  * [ ] Usuário Pode publicar alguma postagem sobre o que ele realizou para o meio ambiente
-  * Usuários podem Curtir as postagens e fazer comentários
 
 ## Config
 

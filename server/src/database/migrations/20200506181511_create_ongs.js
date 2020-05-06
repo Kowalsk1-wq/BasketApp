@@ -1,23 +1,21 @@
-// Users' Table
+// ONGs' Table
 
 exports.up = function(knex) {
-  return knex.schema.createTable('users', function (table) {
+  return knex.schema.createTable('ongs', function (table) {
     table.string('id').primary();
     table.boolean('active').notNullable();
     table.string('picture').notNullable();
     table.string('deleteHash').notNullable();
-    table.string('firstName').notNullable();
-    table.string('lastName').notNullable();
+    table.string('name').notNullable();
+    table.string('cnpj').notNullable();
     table.string('email').notNullable();
     table.string('password').notNullable();
     table.string('phone').notNullable();
-    table.string('bio').notNullable();
-    table.string('gender', 1).notNullable();
     table.string('city').notNullable();
     table.string('uf', 2).notNullable();
   });
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('users');
+  return knex.schema.dropTable('ongs');
 };

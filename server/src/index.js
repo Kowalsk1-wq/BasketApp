@@ -23,7 +23,7 @@ io.on('connection', socket => {
 });
 
 server.listen(4000, () => {
-  console.log(`${chalk.green(figlet.textSync('EnvX', {
+  console.log(`${chalk.green(figlet.textSync('BasketApp', {
     font: 'Doom',
     horizontalLayout: 'full'
   }))} ${chalk.green(version)}`)

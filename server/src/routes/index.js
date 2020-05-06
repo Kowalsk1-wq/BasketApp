@@ -4,30 +4,28 @@ const multer = require("multer");
 const multerConfig = require("../config/multer");
 
 const verifyJWT = require('../middlewares/verifyJWT');
-const ResizeFile = require('../middlewares/resize');
 
 const AppController = require('../controllers/AppController');
 const AuthController = require('../controllers/AuthController');
-const EvpController = require('../controllers/EvpController');
-const PostController = require('../controllers/PostController');
+const OngController = require('../controllers/OngController');
+const ReqController = require('../controllers/RequestController');
 
 routes.get('/', AppController.info);
 
 routes.get('/users', verifyJWT, AuthController.list);
-routes.post('/users', AuthController.create);
+routes.post('/users', multer(multerConfig).single("file"), AuthController.create);
 routes.post('/users/auth', AuthController.login);
 routes.post('/users/auth/activate', AuthController.active);
 routes.put('/users', verifyJWT, AuthController.update);
 routes.delete('/users', verifyJWT, AuthController.delete);
 
-routes.get('/evps', verifyJWT, EvpController.list);
-routes.post('/evps', verifyJWT, EvpController.create);
-routes.delete('/evps/:id', verifyJWT, EvpController.delete);
+routes.post('/ongs', multer(multerConfig).single("file"), OngController.create);
+routes.post('/ongs/auth', OngController.login);
+routes.post('/ongs/auth/activate', OngController.active);
+routes.put('/ongs', verifyJWT, OngController.update);
+routes.delete('/ongs', verifyJWT, OngController.delete);
 
-routes.get('/posts/all', verifyJWT, PostController.listAll);
-routes.get('/posts', verifyJWT, PostController.listWithoutMe);
-routes.get('/posts/me', verifyJWT, PostController.listMe);
-routes.post('/posts', verifyJWT, ResizeFile, multer(multerConfig).single("file"), PostController.create);
-routes.delete('/posts/:id', verifyJWT, PostController.delete);
+routes.get('/requests', verifyJWT, ReqController.list);
+routes.post('/requests', verifyJWT, ReqController.create);
 
 module.exports = routes;
