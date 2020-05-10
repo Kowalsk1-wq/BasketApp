@@ -13,6 +13,7 @@
 
         <q-toolbar-title class="title">
           BasketApp
+          <q-badge color="secondary" align="top">ONG Edition</q-badge>
         </q-toolbar-title>
         
         <q-btn-dropdown
@@ -23,19 +24,17 @@
           <div class="row no-wrap q-pa-md">
             <div class="column">
               <div class="text-h6 q-mb-md">Informações</div>
-              <span @click="redirect('/me')">Perfil</span>
-              <span @click="redirect('/donations')">Doações</span>
-              <span @click="redirect('/relatories')">Relatórios</span>
+              <span @click="redirect('/ong')">Perfil</span>
             </div>
 
             <q-separator vertical inset class="q-mx-lg" />
 
             <div class="column items-center">
               <q-avatar size="72px">
-                <img :src="user.picture" />
+                <img :src="ong.picture" />
               </q-avatar>
 
-              <div class="text-subtitle1 q-mt-md q-mb-xs">{{ user.firstName }} {{ user.lastName }}</div>
+              <div class="text-subtitle1 q-mt-md q-mb-xs">{{ ong.name }}</div>
 
               <q-btn
                 color="primary"
@@ -74,7 +73,7 @@
     </q-page-container>
 
     <div class="copyright">
-      <span>@Rocktech.IO | {{ year }}</span>
+      <span>@Rocket.IO | {{ year }}</span>
     </div>
   </q-layout>
 </template>
@@ -82,10 +81,10 @@
 <script>
 import EssentialLink from 'components/EssentialLink'
 
-import { logout } from '../validators/auth'
+import { ONGlogout } from '../validators/auth'
 
 export default {
-  name: 'AppLayout',
+  name: 'ONGLayout',
 
   components: {
     EssentialLink
@@ -101,39 +100,33 @@ export default {
           id: '1',
           title: 'Página Inicial',
           icon: 'home',
-          link: '/app'
+          link: '/main'
         },
         {
           id: '2',
-          title: 'ONG Explorer',
-          icon: 'explore',
-          link: '/requests'
+          title: 'Pacotes',
+          icon: 'folder',
+          link: '/packages'
         },
         {
           id: '3',
-          title: 'Verificar Doações',
-          icon: 'attach_money',
-          link: '/requests'
-        },
-        {
-          id: '4',
-          title: 'Configurações',
-          icon: 'settings',
-          link: '/settings'
+          title: 'Status das Doações',
+          icon: 'schedule',
+          link: ''
         }
       ],
-      user: null
+      ong: null
     }
   },
 
   mounted () {
-    this.user = JSON.parse(localStorage.getItem('@currentUser'));
+    this.ong = JSON.parse(localStorage.getItem('@currentONG'));
   },
 
   methods: {
     handleLogOut() {
-      logout();
-      this.$router.push('/');
+      ONGlogout();
+      this.$router.push('/auth-ong');
     },
 
     redirect(link) {

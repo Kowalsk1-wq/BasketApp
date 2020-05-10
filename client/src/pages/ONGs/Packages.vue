@@ -1,106 +1,65 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <!-- multistep form -->
-    <form id="msform" @submit="onSubmit" @reset="onReset">
-      <!-- fieldsets -->
-      <fieldset>
-        <h2 class="fs-title">Entrar</h2>
-        <h3 class="fs-subtitle">Preencha os Campos Abaixo!</h3>
-        <input type="text" v-model="id" name="ID" placeholder="ID" />
-        <input type="password" v-model="pwd" name="pass" placeholder="Senha" />
+  <q-page class="justify-evenly">
+    <div class="main row itens-center justify-evenly">
+      <q-btn class="add" @click="pack = true" color="green" icon="add" label="Novo Pacote" />
+      <q-btn class="see" color="grey" icon="visibility" label="Ver Pacotes" />
+    </div>
 
-        <q-toggle v-model="accept" label="Eu Aceito os Termos de Licença!" />
+    <q-dialog v-model="pack" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Novo Pacote</div>
+        </q-card-section>
 
-        <br>
-        <div>
-          <q-btn label="Entrar" type="submit" color="primary"/>
-          <q-btn label="Limpar" type="reset" color="primary" flat class="q-ml-sm" />
-        </div>
-      </fieldset>
-      
-      <span @click="redirect('/auth-ong')" class="ong">És uma ONG?</span>
-    </form>
+        <q-card-section class="q-pt-none">
+          <form id="msform" @submit="onSubmit" @reset="onReset">
+            <!-- fieldsets -->
+            <fieldset>
+              <input type="text" v-model="name" name="name" placeholder="Nome do Pacote" />
+              <input type="text" v-model="description" name="desc" placeholder="Descrição" />
+            </fieldset>
+          </form>
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat  label="Cancelar" v-close-popup />
+          <q-btn push color="primary" label="Confirmar" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
-import { login } from '../../validators/auth'
-
 export default {
-  name: 'PageLogin',
-  components: {},
-  data() {
+  name: 'PagePack',
+  data () {
     return {
-      id: null,
-      pwd: null,
-
-      accept: false
-    }
-  },
-
-  methods: {
-    onSubmit (e) {
-      e.preventDefault();
-
-      if (this.accept !== true) {
-        alert('You need to accept the license and terms first');
-      }
-      else {
-        this.$axios.post('http://localhost:4000/users/auth', {
-          id: this.id,
-          password: this.pwd
-        }).then(response => {
-          login(response.data.token, response.data.user[0]);
-
-          this.$router.push({path: '/app'});
-        }).catch(err => {
-          console.log(err);
-        })
-      }
-    },
-
-    onReset () {
-      this.id = null
-      this.pwd = null
-      this.accept = false
-    },
-
-    redirect (link) {
-      this.$router.push({ path: link });
+      pack: false,
+      
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  /*custom font*/
-  @import url(https://fonts.googleapis.com/css?family=Montserrat);
+  .main {
+    width: 100%;
+    height: auto;
 
-  /*basic reset*/
-  * {margin: 0; padding: 0;}
+    .add {
+      position: absolute;
+      top: 2%;
+      right: 185px;
+    }
 
-  html {
-    height: 100%;
-    /*Image only BG fallback*/
-    
-    /*background = gradient + image pattern combo*/
-    background: 
-      linear-gradient(rgba(196, 102, 0, 0.6), rgba(155, 89, 182, 0.6));
-  
-  }
-
-  body {
-    font-family: montserrat, arial, verdana;
-  }
-  /*form styles*/
-  #msform {
-    width: 400px;
-    margin: 50px auto;
-    text-align: center;
-    position: relative;
-    margin-bottom: 130px;
+    .see {
+      @extend .add;
+      right: 15px;
+    }
   }
   #msform fieldset {
+    font-family: 'Roboto';
     background: white;
     border: 0 none;
     border-radius: 3px;

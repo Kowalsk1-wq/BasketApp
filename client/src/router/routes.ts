@@ -12,13 +12,7 @@ const routes: RouteConfig[] = [
       { 
         path: 'signup', 
         component: () => import('pages/Users/Register.vue') 
-      }
-    ]
-  },
-  {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
+      },
       { 
         path: 'auth-ong', 
         component: () => import('pages/ONGs/Login.vue') 
@@ -45,7 +39,34 @@ const routes: RouteConfig[] = [
       {
         path: 'settings',
         component: () => import('pages/Users/Config.vue')
+      },
+      { 
+        path: 'me', 
+        component: () => import('pages/Users/Me.vue') 
+      },
+      { 
+        path: 'donations', 
+        component: () => import('pages/Users/Donations.vue') 
+      },
+      { 
+        path: 'relatories', 
+        component: () => import('pages/Users/Relatories.vue') 
       }
+    ]
+  },
+  {
+    path: '/',
+    component: () => import('layouts/ONGLayout.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'main',
+        component: () => import('pages/ONGs/Main.vue')
+      },
+      {
+        path: 'packages',
+        component: () => import('pages/ONGs/Packages.vue')
+      },
     ]
   }
 ]

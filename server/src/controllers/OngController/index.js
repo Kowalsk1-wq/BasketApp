@@ -47,7 +47,6 @@ module.exports = {
         email,
         password: hashPwd,
         phone,
-        bio,
         city,
         uf,
       });

@@ -21,11 +21,8 @@ Doe Cestas Básicas, Faça a Diferença, Salve Vidas!
 
 ## Config
 
-#### Client
-* Update client/.env with your mapbox token
-
 #### Server
-* Update server/.env with your google client id and secret
+* Update server/.env with your imgur client ID and others Credentials
 
 ## Setup / Run
 
