@@ -1,22 +1,30 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <!-- multistep form -->
-    <form id="msform">
+    <form id="msform" @submit.prevent="onSignUp">
       <!-- fieldsets -->
       <fieldset>
         <h2 class="fs-title">Vamos Criar Sua Conta!!</h2>
-        <input type="email" name="email" placeholder="Email" />
-        <input type="text" name="cnpj" placeholder="CNPJ" />
-        <input type="password" name="pass" placeholder="Senha" />
-        <input type="password" name="cpass" placeholder="Confirme a Senha" />
+        <input type="email" v-model="email" placeholder="Email" />
+        <input type="text" v-model="cnpj" placeholder="CNPJ" />
+        <input type="password" v-model="pwd" placeholder="Senha" />
+        <input type="password" v-model="rPwd" placeholder="Confirme a Senha" />
         <q-separator /><br>
         <h2 class="fs-title">Detalhes Sobre a Sua ONG</h2>
         <h3 class="fs-subtitle"></h3>
-        <input type="text" name="name" placeholder="Nome da ONG" />
-        <input type="text" name="nameRep" placeholder="Nome do Representante" />
-        <input type="text" name="phone" placeholder="Telefone" />
-        <input type="text" name="city" placeholder="Cidade" />
-        <input type="text" name="uf" placeholder="Estado" />
+        <input type="text" v-model="ongName" placeholder="Nome da ONG" />
+        <input type="text" v-model="repName" placeholder="Nome do Representante" />
+        <input type="text" v-model="phone" placeholder="Telefone" />
+        <input type="text" v-model="city" placeholder="Cidade" />
+        <input type="text" v-model="uf" placeholder="Estado" />
+
+        <q-separator /><br>
+
+        <div class="q-pa-md" style="max-width: 300px; margin-left: 50%; transform: translate(-50%, -50%); margin-top: 75px">
+          <p style="margin-bottom: 15px; font-weight: bold; font-size: 20px;">Foto de Perfil</p>
+          <input type="file" @change="onFileSelected" >
+        </div>
+        <q-separator /><br>
         <input type="submit" name="submit" class="submit action-button" value="Cadastrar" />
       </fieldset>
     </form>
@@ -29,7 +37,49 @@ export default {
   components: {},
   data() {
     return {
-      
+      email: '',
+      cnpj: '',
+      pwd: '',
+      rPwd: '',
+      ongName: '',
+      repName: '',
+      phone: '',
+      city: '',
+      uf: '',
+
+      selectedFile: null
+    }
+  },
+
+  methods: {
+    onFileSelected(ev) {
+      this.selectedFile = ev.target.files[0]
+    },
+
+    onSignUp() {
+      if (this.pwd !== this.rPwd) {
+        alert('Passwords Not Matching!');
+      } else {
+        const data = new FormData();
+        data.append('file', this.selectedFile, this.selectedFile.name);
+        data.append('name', this.ongName);
+        data.append('repName', this.repName);
+        data.append('cnpj', this.cnpj);
+        data.append('email', this.email);
+        data.append('password', this.pwd);
+        data.append('phone', this.phone);
+        data.append('city', this.city);
+        data.append('uf', this.uf);
+
+        this.$axios.post('http://localhost:4000/ongs', data).then(res => {
+          console.log(res.data);
+
+          localStorage.setItem('@OngEmail', res.data.email);
+          localStorage.setItem('@OngID', res.data.id);
+
+          this.$router.push({ path: '/ong-active' });
+        });
+      }
     }
   }
 }

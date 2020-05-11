@@ -3,27 +3,48 @@
     <div class="main row itens-center justify-evenly">
       <q-btn class="add" @click="pack = true" color="green" icon="add" label="Novo Pacote" />
       <q-btn class="see" color="grey" icon="visibility" label="Ver Pacotes" />
+
+      <PackageItem
+        class="pack"
+        v-for="p in packs"
+        :key="p.name"
+        v-bind="p"
+      />
     </div>
 
     <q-dialog v-model="pack" persistent>
-      <q-card style="min-width: 350px">
+      <q-card style="min-width: 350px; max-height: 450px;">
         <q-card-section>
           <div class="text-h6">Novo Pacote</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <form id="msform" @submit="onSubmit" @reset="onReset">
-            <!-- fieldsets -->
-            <fieldset>
-              <input type="text" v-model="name" name="name" placeholder="Nome do Pacote" />
-              <input type="text" v-model="description" name="desc" placeholder="Descrição" />
-            </fieldset>
+          <form id="msform">
+						<q-input type="text" v-model="name" label="Nome do Pacote" />
+						<q-input type="text" v-model="description" label="Descrição" />
+						<q-input type="text" v-model="item" label="Item">
+							<template v-slot:after>
+								<q-btn round dense flat icon="add" @click="addItem()" />
+							</template>
+						</q-input>
+						<div class="itens">
+							<p class="itemTitle">
+								Items Aqui
+							</p>
+
+							<p 
+								v-for="i in items" 
+								:key="i">
+									{{ i }} 
+									<q-btn round dense flat icon="delete" @click="deltItem(items.indexOf(i))" />
+							</p>
+						</div>
           </form>
         </q-card-section>
         <q-separator />
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat  label="Cancelar" v-close-popup />
-          <q-btn push color="primary" label="Confirmar" v-close-popup />
+          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn @click="createPack()" push color="primary" label="Confirmar" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -31,18 +52,99 @@
 </template>
 
 <script>
+import PackageItem from 'components/PackageItem'
+
 export default {
   name: 'PagePack',
+  components: {
+    PackageItem
+  },
   data () {
     return {
-      pack: false,
-      
+      token: localStorage.getItem('@accessToken'),
+			pack: false,
+			name: '',
+			description: '',
+			item: '',
+
+			items: [],
+
+			packs: null
     }
-  }
+	},
+
+	mounted () {
+		this.$axios.get("http://localhost:4000/requests/me", {
+			headers: {
+				'x-access-token' : this.token
+			}
+		}).then(res => {
+      this.packs = res.data.packages;
+      this.packs.items.itms = JSON.parse(res.data.packages.items.itms)
+    });
+	},
+	
+	methods: {
+		addItem () {
+			this.items.push(this.item);
+
+			this.item = '';
+		},
+
+		deltItem (pos) {
+			this.items.splice(pos, 1);
+		},
+
+		createPack () {
+			const data = {
+				name: this.name,
+				description: this.description,
+        items: {
+          itms: [ this.items ]
+        }
+      };
+
+			this.$axios.post("http://localhost:4000/requests", {
+        name: data.name,
+        description: data.description,
+        items: JSON.stringify(data.items)
+      }, {
+				headers: {
+					'x-access-token' : this.token
+				}
+      }).then(res => {
+        console.log(res.data);
+
+        this.name = '';
+        this.description = '';
+        this.items = [];
+      });
+		}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
+	.itens {
+		margin-top: 15px;
+
+		.itemTitle {
+			text-align: center;
+			font-size: 20px;
+			font-weight: bold;
+		}
+	}
+
+  .pack {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 650px;
+    height: 120px;
+  }
+
   .main {
     width: 100%;
     height: auto;
@@ -57,24 +159,6 @@ export default {
       @extend .add;
       right: 15px;
     }
-  }
-  #msform fieldset {
-    font-family: 'Roboto';
-    background: white;
-    border: 0 none;
-    border-radius: 3px;
-    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-    padding: 20px 30px;
-    box-sizing: border-box;
-    width: 80%;
-    margin: 0 10%;
-    
-    /*stacking fieldsets above each other*/
-    position: relative;
-  }
-  /*Hide all except first fieldset*/
-  #msform fieldset:not(:first-of-type) {
-    display: none;
   }
   /*inputs*/
   #msform input, #msform textarea {

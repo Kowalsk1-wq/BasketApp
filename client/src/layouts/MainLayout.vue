@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf" class="main">
     <q-header elevated>
       <q-toolbar class="toolbar"> 
-        <q-toolbar-title class="title">
+        <q-toolbar-title class="absolute-center">
           BasketApp
           <q-badge v-if="this.isONG() === true" color="secondary" align="top">ONG Edition</q-badge>
         </q-toolbar-title>
@@ -95,12 +95,9 @@ export default {
     height: 60px;
   }
 
-  .title {
-    margin-left: 150px;
-  }
-
   .btnEntry {
-    margin-right: 150px;
+    position: absolute;
+    right: 15px;
   }
 
   footer {

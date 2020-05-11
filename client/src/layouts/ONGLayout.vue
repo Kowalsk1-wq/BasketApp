@@ -11,13 +11,15 @@
           aria-label="Menu"
         />
 
-        <q-toolbar-title class="title">
+        <q-toolbar-title class="absolute-center">
           BasketApp
           <q-badge color="secondary" align="top">ONG Edition</q-badge>
         </q-toolbar-title>
         
         <q-btn-dropdown
-          class="push"
+          flat
+          style="position: absolute; right: 15px;"
+          class="absolute-right"
           color="default"
           label="Conta"
         >
@@ -53,8 +55,6 @@
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
-      content-class="bg-grey-1"
     >
       <q-list>
         <q-item-label header class="text-white headerBar">
@@ -150,10 +150,6 @@ export default {
   
   .main {
     background-color: #FFFDF7;
-  }
-
-  .title {
-    margin-left: 50px;
   }
 
   .expansion {

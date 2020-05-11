@@ -19,6 +19,7 @@ module.exports = {
     const { data } = request.file;
     const {
       name,
+      repName,
       cnpj,
       email,
       password,
@@ -43,6 +44,7 @@ module.exports = {
         picture: data.link,
         deleteHash: data.deletehash,
         name,
+        represent: repName,
         cnpj,
         email,
         password: hashPwd,
@@ -104,9 +106,9 @@ module.exports = {
 
   delete : async (request, response) => {
     const token = request.headers['x-access-token'];
-    const decodedToken = jwtDecode(token);
+    const { cnpj } = jwtDecode(token);
 
-    const [ong] =  await connection('ongs').select('*').where({ id: decodedToken.id })
+    const [ong] =  await connection('ongs').select('*').where({ cnpj })
 
     await axios({
       method: 'delete',
@@ -116,7 +118,7 @@ module.exports = {
       }
     })
 
-    await connection('ongs').select('*').where({ id: decodedToken.id }).delete()
+    await connection('ongs').select('*').where({ cnpj }).delete()
 
     return response.status(200).send();
   },

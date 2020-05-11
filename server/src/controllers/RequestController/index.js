@@ -11,28 +11,62 @@ module.exports = {
     });
   },
 
+  listMe : async (request, response) => {
+    const token = request.headers['x-access-token'];
+    const { cnpj } = jwtDecode(token);
+
+    const [targetONG] = await connection('ongs').select('*').where({ cnpj });
+
+    let meRequests = await connection('requests').select('*').where({ ong_id: targetONG.id });
+
+    return response.json({
+      packages: meRequests
+    })
+  },
+
   create : async (request, response) => {
     const token = request.headers['x-access-token'];
     const {
       name,
       description,
-      itens
+      items
     } = request.body;
 
     const id = crypto.randomBytes(5).toString('HEX');
 
-    const ong_id = jwtDecode(token).id;
+    const { cnpj } = jwtDecode(token);
+
+    const [targetONG] = await connection('ongs').select('*').where({ cnpj });
 
     const [req] = await connection('requests').insert({
       id,
       name,
       description,
-      itens,
-      ong_id
+      items,
+      ong_id: targetONG.id
     });
 
     return response.json({
       request: req
     })
+  },
+
+  delete : async (request, response) => {
+    const token = request.headers['x-access-token'];
+    const { cnpj } = jwtDecode(token);
+    const [targetONG] = await connection('ongs').select('*').where({ cnpj });
+
+    const id = request.headers['x-target-pack-id'];
+
+    const [targetPack] = await connection('requests').select('*').where({ id });
+
+    if (targetONG.id === targetPack.ong_id) {
+      await connection('requests').select('*').where({ id }).delete();
+      return response.status(200).send();
+    } else {
+      return response.status(401).json({
+        err: "You aren't the Request' Author"
+      })
+    }
   }
 };

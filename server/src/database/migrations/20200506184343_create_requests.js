@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.string('id').primary();
     table.string('name').notNullable();
     table.string('description').notNullable();
-    table.specificType('itens', 'text ARRAY');
+    table.string('items').notNullable();
 
     table.string('ong_id').notNullable();
 

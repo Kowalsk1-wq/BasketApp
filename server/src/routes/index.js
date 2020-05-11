@@ -26,6 +26,8 @@ routes.put('/ongs', verifyJWT, OngController.update);
 routes.delete('/ongs', verifyJWT, OngController.delete);
 
 routes.get('/requests', verifyJWT, ReqController.list);
+routes.get('/requests/me', verifyJWT, ReqController.listMe);
 routes.post('/requests', verifyJWT, ReqController.create);
+routes.delete('/requests', verifyJWT, ReqController.delete);
 
 module.exports = routes;

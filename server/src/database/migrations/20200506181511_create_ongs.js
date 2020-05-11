@@ -7,6 +7,7 @@ exports.up = function(knex) {
     table.string('picture').notNullable();
     table.string('deleteHash').notNullable();
     table.string('name').notNullable();
+    table.string('represent').notNullable();
     table.string('cnpj').notNullable();
     table.string('email').notNullable();
     table.string('password').notNullable();

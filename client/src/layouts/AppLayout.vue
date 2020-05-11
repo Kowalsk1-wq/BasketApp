@@ -11,7 +11,7 @@
           aria-label="Menu"
         />
 
-        <q-toolbar-title class="title">
+        <q-toolbar-title class="absolute-center">
           BasketApp
         </q-toolbar-title>
         
@@ -157,10 +157,6 @@ export default {
   
   .main {
     background-color: #FFFDF7;
-  }
-
-  .title {
-    margin-left: 50px;
   }
 
   .expansion {

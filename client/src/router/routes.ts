@@ -20,6 +20,10 @@ const routes: RouteConfig[] = [
       { 
         path: 'signup-ong', 
         component: () => import('pages/ONGs/Register.vue') 
+      },
+      {
+        path: 'ong-active',
+        component: () => import('pages/ONGs/Active.vue')
       }
     ]
   },
