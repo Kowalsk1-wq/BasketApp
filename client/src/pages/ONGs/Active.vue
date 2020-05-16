@@ -13,26 +13,26 @@ export default {
   data() {
     return {
       ongEmail: null,
-      ongID: null
+      ongCnpj: null
     }
   },
 
   mounted() {
     this.ongEmail = localStorage.getItem('@OngEmail');
-    this.ongID = localStorage.getItem('@OngID');
+    this.ongCnpj = localStorage.getItem('@OngCnpj');
   },
 
   methods: {
     onActive() {
       this.$axios.post('http://localhost:4000/ongs/auth/activate', '', {
         headers: {
-          'x-access-id' : this.ongID
+          'x-access-cnpj' : this.ongCnpj
         }
       }).then(res => {
         console.log(res.data);
 
         localStorage.removeItem('@OngEmail');
-        localStorage.removeItem('@OngID');
+        localStorage.removeItem('@OngCnpj');
 
         this.$router.push({ path: '/auth-ong' });
       }).catch(err => console.log(err));

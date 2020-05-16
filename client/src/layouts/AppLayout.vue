@@ -16,7 +16,8 @@
         </q-toolbar-title>
         
         <q-btn-dropdown
-          class="push"
+          flat
+          class="absolute-right"
           color="default"
           label="Conta"
         >

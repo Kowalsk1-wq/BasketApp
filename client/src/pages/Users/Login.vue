@@ -6,7 +6,7 @@
       <fieldset>
         <h2 class="fs-title">Entrar</h2>
         <h3 class="fs-subtitle">Preencha os Campos Abaixo!</h3>
-        <input type="text" v-model="id" name="ID" placeholder="ID" />
+        <input type="text" v-model="email" name="email" placeholder="Email" />
         <input type="password" v-model="pwd" name="pass" placeholder="Senha" />
 
         <q-toggle v-model="accept" label="Eu Aceito os Termos de Licença!" />
@@ -31,7 +31,7 @@ export default {
   components: {},
   data() {
     return {
-      id: null,
+      email: null,
       pwd: null,
 
       accept: false
@@ -47,10 +47,10 @@ export default {
       }
       else {
         this.$axios.post('http://localhost:4000/users/auth', {
-          id: this.id,
+          email: this.email,
           password: this.pwd
         }).then(response => {
-          login(response.data.token, response.data.user[0]);
+          login(response.data.token, response.data.user);
 
           this.$router.push({path: '/app'});
         }).catch(err => {
@@ -60,7 +60,7 @@ export default {
     },
 
     onReset () {
-      this.id = null
+      this.email = null
       this.pwd = null
       this.accept = false
     },

@@ -1,16 +1,15 @@
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
 const jwebtoken = require('jsonwebtoken');
 const jwtDecode = require('jwt-decode');
 
-const connection = require('../../database/connection');
+const User = require('../../models/User.js');
 const emailService = require('../../services/email');
 
 module.exports = {
   list : async (request, response) => {
     const token = request.headers['x-access-token'];
-    let users = await connection('users').select('*');
+    let users = await User.findAll();
 
     let decodedToken = await jwtDecode(token);
 
@@ -40,24 +39,21 @@ module.exports = {
       email,
       password,
       phone,
-      bio,
       gender,
       city,
       uf
     } = request.body;
 
-    const user = await connection('users').select('*').where({ email });
+    let user = await User.findOne({ email })
 
-    if (user.length !== 0) {
+    if (user) {
       return response.status(401).json({
         error: 'User Already Exists!'
       });
     } else {
-      let id = crypto.randomBytes(5).toString('HEX');
       const hashPwd = await bcrypt.hash(password, 12);
 
-      await connection('users').insert({
-        id,
+      await User.create({
         active: false,
         picture: data.link,
         deleteHash: data.deletehash,
@@ -66,7 +62,6 @@ module.exports = {
         email,
         password: hashPwd,
         phone,
-        bio,
         gender,
         city,
         uf,
@@ -81,7 +76,7 @@ module.exports = {
           Você acaba de realizar o cadastro no BasketApp, sua plataforma comunitária de doação de cestas básicas <br/>
           Para ter acesso à nossa plataforma, siga estes passos: <br/>
             >> 1) Digite suas credenciais: <br/>
-              <strong>ID:</strong> ${id} <br/>
+              <strong>Email:</strong> ${email} <br/>
               <strong>Senha:</strong> a senha que você cadastrou! <br/>
             >> 2) Se Você conseguiu entrar na plataforma, muito bem, divirta-se! <br/>Agora, se não conseguiu,<br/> envie um email para nós agora mesmo: limabrot879@gmail.com e <strong>nos informe o seu problema</strong>
         </p>
@@ -91,7 +86,6 @@ module.exports = {
       return response.json({
         success: true,
         email,
-        id,
         message: 'User Sucessful Registered!'
       })
     }
@@ -99,9 +93,11 @@ module.exports = {
 
   update : async (request, response) => {
     const token = request.headers['x-access-token'];
-    const decodedToken = jwtDecode(token);
+    const { email } = jwtDecode(token);
     const data = request.body;
     const creds = Object.keys(data);
+
+    let user = await User.findOne({ email });
 
     let errors = [];
 
@@ -109,10 +105,8 @@ module.exports = {
       if (el !== creds[index]) {
         errors.push(el);
       } else {
-        await connection('users')
-          .select('*')
-          .where({ id: decodedToken.id })
-          .update(el, data[el])
+        user[el] = data[el];
+        await user.save();
       }
     })
 
@@ -126,7 +120,7 @@ module.exports = {
     const token = request.headers['x-access-token'];
     const decodedToken = jwtDecode(token);
 
-    const [user] =  await connection('users').select('*').where({ id: decodedToken.id })
+    const user =  await User.findOne({ 'email': decodedToken.email });
 
     await axios({
       method: 'delete',
@@ -136,7 +130,7 @@ module.exports = {
       }
     })
 
-    await connection('users').select('*').where({ id: decodedToken.id }).delete()
+    await user.remove();
 
     return response.status(200).send();
   },
@@ -144,25 +138,25 @@ module.exports = {
   /* Authentication */
 
   login : async (request, response) => {
-    const { id, password } = request.body;
+    const { email, password } = request.body;
 
-    const user = await connection('users').select('*').where({ id });
+    let user = await User.findOne({ email });
 
-    if (user.length === 0) {
+    if (!user) {
       return response.status(404).json({
         auth: false,
         message: 'Could Not Find The User'
       });
     }
 
-    if (user[0].active === 0) {
+    if (user.active === "false") {
       return response.status(401).json({
         auth: false,
         message: 'Confirm The User Email!'
       })
     }
 
-    const isMatched = await bcrypt.compare(password, user[0].password);
+    const isMatched = await bcrypt.compare(password, user.password);
 
     if (!isMatched) {
       return response.status(404).json({
@@ -171,7 +165,7 @@ module.exports = {
       });
     }
 
-    var token = jwebtoken.sign({ id }, 'aklzaoililajh', {
+    var token = jwebtoken.sign({ email }, 'aklzaoililajh', {
       expiresIn: 1800
     });
 
@@ -183,25 +177,24 @@ module.exports = {
   },
 
   active : async (request, response) => {
-    const id = request.headers['x-access-id'];
+    const email = request.headers['x-access-email'];
 
-    let user = await connection('users').select('*').where({ id });
+    let user = await User.findOne({ email });
 
-    if (user.length === 0) {
+    if (!user) {
       return response.status(404).json({
         activated: false,
         message: 'User Not Found!'
       })
     } else {
-      if (user[0].active === 1) {
+      if (user.active === "true") {
         return response.json({
           activated: true,
           message: 'User Already Activated!'
         })
       } else {
-        user = await connection('users').select('*').where({ id }).update({
-          active: true
-        })
+        user.active = true;
+        await user.save();
 
         return response.json({
           activated: true,

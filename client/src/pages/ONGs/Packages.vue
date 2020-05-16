@@ -1,15 +1,13 @@
 <template>
-  <q-page class="justify-evenly">
+  <q-page class="q-pa-md q-gutter-md justify-evenly">
     <div class="main row itens-center justify-evenly">
       <q-btn class="add" @click="pack = true" color="green" icon="add" label="Novo Pacote" />
-      <q-btn class="see" color="grey" icon="visibility" label="Ver Pacotes" />
+      
+      <q-list bordered class="rounded-borders" style="max-width: 600px">
+        <q-item-label header>Meus Pacotes</q-item-label>
 
-      <PackageItem
-        class="pack"
-        v-for="p in packs"
-        :key="p.name"
-        v-bind="p"
-      />
+        <PackageItem v-for="p in packs" :key="p.name" v-bind="p" />
+      </q-list>
     </div>
 
     <q-dialog v-model="pack" persistent>
@@ -24,6 +22,7 @@
 						<q-input type="text" v-model="description" label="Descrição" />
 						<q-input type="text" v-model="item" label="Item">
 							<template v-slot:after>
+                <q-select v-model="quantity" :options="options" />
 								<q-btn round dense flat icon="add" @click="addItem()" />
 							</template>
 						</q-input>
@@ -35,7 +34,7 @@
 							<p 
 								v-for="i in items" 
 								:key="i">
-									{{ i }} 
+									{{ i.name }} - x{{ i.quantity }} 
 									<q-btn round dense flat icon="delete" @click="deltItem(items.indexOf(i))" />
 							</p>
 						</div>
@@ -43,7 +42,7 @@
         </q-card-section>
         <q-separator />
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn flat label="Cancelar" @click="reset()" v-close-popup />
           <q-btn @click="createPack()" push color="primary" label="Confirmar" />
         </q-card-actions>
       </q-card>
@@ -66,6 +65,20 @@ export default {
 			name: '',
 			description: '',
 			item: '',
+      quantity: 1,
+
+      options: [
+        1, 
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
 
 			items: [],
 
@@ -80,34 +93,43 @@ export default {
 			}
 		}).then(res => {
       this.packs = res.data.packages;
-      this.packs.items.itms = JSON.parse(res.data.packages.items.itms)
     });
 	},
 	
 	methods: {
 		addItem () {
-			this.items.push(this.item);
+			this.items.push({
+        name: this.item,
+        quantity: this.quantity
+      });
 
 			this.item = '';
+      this.quantity = 1;
 		},
 
 		deltItem (pos) {
 			this.items.splice(pos, 1);
 		},
 
+    reset() {
+      this.name = '';
+      this.description = '';
+
+      this.item = '';
+      this.quantity = 1;
+    },
+
 		createPack () {
 			const data = {
 				name: this.name,
 				description: this.description,
-        items: {
-          itms: [ this.items ]
-        }
+        items: this.items
       };
 
 			this.$axios.post("http://localhost:4000/requests", {
         name: data.name,
         description: data.description,
-        items: JSON.stringify(data.items)
+        items: data.items
       }, {
 				headers: {
 					'x-access-token' : this.token
@@ -135,14 +157,8 @@ export default {
 		}
 	}
 
-  .pack {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: 650px;
-    height: 120px;
+  .packs {
+    
   }
 
   .main {
@@ -151,12 +167,7 @@ export default {
 
     .add {
       position: absolute;
-      top: 2%;
-      right: 185px;
-    }
-
-    .see {
-      @extend .add;
+      top: 5%;
       right: 15px;
     }
   }

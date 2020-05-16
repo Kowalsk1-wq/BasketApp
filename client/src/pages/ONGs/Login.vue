@@ -50,7 +50,7 @@ export default {
           cnpj: this.cnpj,
           password: this.pwd
         }).then(response => {
-          ONGlogin(response.data.token, response.data.ong[0]);
+          ONGlogin(response.data.token, response.data.ong);
 
           this.$router.push({path: '/main'});
         }).catch(err => {

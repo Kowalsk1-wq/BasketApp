@@ -13,6 +13,10 @@ const routes: RouteConfig[] = [
         path: 'signup', 
         component: () => import('pages/Users/Register.vue') 
       },
+      {
+        path: 'active',
+        component: () => import('pages/Users/Active.vue')
+      },
       { 
         path: 'auth-ong', 
         component: () => import('pages/ONGs/Login.vue') 
@@ -71,6 +75,10 @@ const routes: RouteConfig[] = [
         path: 'packages',
         component: () => import('pages/ONGs/Packages.vue')
       },
+      {
+        path: 'ong',
+        component: () => import('pages/ONGs/Me.vue')
+      }
     ]
   }
 ]

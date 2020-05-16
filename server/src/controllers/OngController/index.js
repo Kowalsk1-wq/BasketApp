@@ -1,18 +1,10 @@
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
 const jwebtoken = require('jsonwebtoken');
 const jwtDecode = require('jwt-decode');
 
-const connection = require('../../database/connection');
+const ONG = require('../../models/ONG.js');
 const emailService = require('../../services/email');
-
-async function updateong(cred, value) {
-  await connection('ongs')
-    .select('*')
-    .where({ id: decodedToken.id })
-    .update(cred, value)
-}
 
 module.exports = {
   create : async (request, response) => {
@@ -28,18 +20,16 @@ module.exports = {
       uf
     } = request.body;
 
-    const ong = await connection('ongs').select('*').where({ email });
+    const ong = await ONG.findOne({ email });
 
-    if (ong.length !== 0) {
+    if (ong) {
       return response.status(401).json({
         error: 'ong Already Exists!'
       });
     } else {
-      let id = crypto.randomBytes(5).toString('HEX');
       const hashPwd = await bcrypt.hash(password, 12);
 
-      await connection('ongs').insert({
-        id,
+      await ONG.create({
         active: false,
         picture: data.link,
         deleteHash: data.deletehash,
@@ -73,7 +63,7 @@ module.exports = {
       return response.json({
         success: true,
         email,
-        id,
+        cnpj,
         message: 'ONG Sucessful Registered!'
       })
     }
@@ -81,9 +71,11 @@ module.exports = {
 
   update : async (request, response) => {
     const token = request.headers['x-access-token'];
-    const decodedToken = jwtDecode(token);
+    const { cnpj } = jwtDecode(token);
     const data = request.body;
     const creds = Object.keys(data);
+
+    let ong = await ONG.findOne({ cnpj });
 
     let errors = [];
 
@@ -91,10 +83,8 @@ module.exports = {
       if (el !== creds[index]) {
         errors.push(el);
       } else {
-        await connection('ongs')
-          .select('*')
-          .where({ id: decodedToken.id })
-          .update(el, data[el])
+        ong[el] = data[el];
+        await ong.save();
       }
     })
 
@@ -108,7 +98,13 @@ module.exports = {
     const token = request.headers['x-access-token'];
     const { cnpj } = jwtDecode(token);
 
-    const [ong] =  await connection('ongs').select('*').where({ cnpj })
+    const ong = await ONG.findOne({ cnpj });
+
+    if (!ong) {
+      return response.json({ 
+        err: 'ONG Not Found!'
+      })
+    }
 
     await axios({
       method: 'delete',
@@ -118,7 +114,7 @@ module.exports = {
       }
     })
 
-    await connection('ongs').select('*').where({ cnpj }).delete()
+    await ong.remove();
 
     return response.status(200).send();
   },
@@ -128,23 +124,23 @@ module.exports = {
   login : async (request, response) => {
     const { cnpj, password } = request.body;
 
-    const ong = await connection('ongs').select('*').where({ cnpj });
+    const ong = await ONG.findOne({ cnpj });
 
-    if (ong.length === 0) {
+    if (!ong) {
       return response.status(404).json({
         auth: false,
         message: 'Could Not Find The Ong'
       });
     }
 
-    if (ong[0].active === 0) {
+    if (ong.active === "false") {
       return response.status(401).json({
         auth: false,
         message: "Confirm The Ong's Email!"
       })
     }
 
-    const isMatched = await bcrypt.compare(password, ong[0].password);
+    const isMatched = await bcrypt.compare(password, ong.password);
 
     if (!isMatched) {
       return response.status(404).json({
@@ -165,25 +161,24 @@ module.exports = {
   },
 
   active : async (request, response) => {
-    const id = request.headers['x-access-id'];
+    const cnpj = request.headers['x-access-cnpj'];
 
-    let ong = await connection('ongs').select('*').where({ id });
+    let ong = await ONG.findOne({ cnpj });
 
-    if (ong.length === 0) {
+    if (!ong) {
       return response.status(404).json({
         activated: false,
         message: 'Ong Not Found!'
       })
     } else {
-      if (ong[0].active === 1) {
+      if (ong.active === 1) {
         return response.json({
           activated: true,
           message: 'Ong Already Activated!'
         })
       } else {
-        ong = await connection('ongs').select('*').where({ id }).update({
-          active: true
-        })
+        ong.active = true;
+        await ong.save();
 
         return response.json({
           activated: true,

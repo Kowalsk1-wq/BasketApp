@@ -1,7 +1,17 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <q-item class="item">
-      <q-item-section top>
+    <q-item>
+        <q-item-section avatar top>
+          <q-avatar>
+            <img :src="author.picture">
+          </q-avatar>
+        </q-item-section>
+
+        <q-item-section top class="col-2 gt-sm">
+          <q-item-label class="q-mt-sm">{{ author.name }}</q-item-label>
+        </q-item-section>
+
+        <q-item-section top>
         <q-item-label lines="1">
           <span class="text-weight-medium">{{ name }}</span>
         </q-item-label>
@@ -17,16 +27,23 @@
           <q-btn @click="pack = true" flat color="primary" icon="info" label="Detalhes" />
         </div>
       </q-item-section>
-    </q-item>
+      </q-item>
 
-    <q-dialog style="width: 100%; height: 100%;" v-model="pack" persistent>
+      <q-dialog style="width: 100%; height: 100%;" v-model="pack" persistent>
       <q-card style="min-width: 350px; max-height: 450px; overflow-x: hidden;">
         <q-card-section>
           <div class="text-h6">{{ name }}</div>
           <span>{{ description }}</span>
         </q-card-section>
 
-        <h4 class="status">Status: {{ status }}</h4>
+        <div class="infoOng">
+          <q-chip size="xl">
+            <q-avatar>
+              <img :src="author.picture">
+            </q-avatar>
+            {{ author.name }}
+          </q-chip>
+        </div>
 
         <q-card-section class="q-pt-none">
           <div class="item" v-for="i in items">
@@ -37,8 +54,7 @@
         <q-separator />
         <q-card-actions align="right" class="text-primary">
           <q-btn flat title="Fechar" icon="close" v-close-popup />
-          <q-btn flat title="Ver Status" icon="access_time" />
-          <q-btn push title="Confirmar Doação" color="primary" icon="done" />
+          <q-btn push title="Efetuar Doação" color="primary" icon="done" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -64,6 +80,7 @@ export default {
     _id: {
       type: String
     },
+    author: String,
     name: {
       type: String
     },
@@ -100,11 +117,9 @@ export default {
     }
   }
 
-  .status {
+  .infoOng {
     position: absolute;
-    right: 65px;
-    top: -30px;
-
-    font-size: 25px;
+    right: 5px;
+    top: 15px;
   }
 </style>

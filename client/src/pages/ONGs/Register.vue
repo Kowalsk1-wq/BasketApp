@@ -5,18 +5,18 @@
       <!-- fieldsets -->
       <fieldset>
         <h2 class="fs-title">Vamos Criar Sua Conta!!</h2>
-        <input type="email" v-model="email" placeholder="Email" />
-        <input type="text" v-model="cnpj" placeholder="CNPJ" />
-        <input type="password" v-model="pwd" placeholder="Senha" />
-        <input type="password" v-model="rPwd" placeholder="Confirme a Senha" />
+        <q-input class="input" outlined type="email" v-model="email" placeholder="Email" />
+        <q-input class="input" outlined type="text" v-model="cnpj" placeholder="CNPJ" />
+        <q-input class="input" outlined type="password" v-model="pwd" placeholder="Senha" />
+        <q-input class="input" outlined type="password" v-model="rPwd" placeholder="Confirme a Senha" />
         <q-separator /><br>
         <h2 class="fs-title">Detalhes Sobre a Sua ONG</h2>
         <h3 class="fs-subtitle"></h3>
-        <input type="text" v-model="ongName" placeholder="Nome da ONG" />
-        <input type="text" v-model="repName" placeholder="Nome do Representante" />
-        <input type="text" v-model="phone" placeholder="Telefone" />
-        <input type="text" v-model="city" placeholder="Cidade" />
-        <input type="text" v-model="uf" placeholder="Estado" />
+        <q-input class="input" outlined type="text" v-model="ongName" placeholder="Nome da ONG" />
+        <q-input class="input" outlined type="text" v-model="repName" placeholder="Nome do Representante" />
+        <q-input class="input" outlined type="text" v-model="phone" mask="(##) ##### - ####" placeholder="Telefone" />
+        <q-input class="input" outlined type="text" v-model="city" placeholder="Cidade" />
+        <q-input class="input" outlined type="text" v-model="uf" placeholder="Estado" />
 
         <q-separator /><br>
 
@@ -75,7 +75,7 @@ export default {
           console.log(res.data);
 
           localStorage.setItem('@OngEmail', res.data.email);
-          localStorage.setItem('@OngID', res.data.id);
+          localStorage.setItem('@OngCnpj', res.data.cnpj);
 
           this.$router.push({ path: '/ong-active' });
         });
@@ -121,7 +121,7 @@ export default {
     display: none;
   }
   /*inputs*/
-  #msform input, #msform textarea {
+  #msform .input {
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 3px;
