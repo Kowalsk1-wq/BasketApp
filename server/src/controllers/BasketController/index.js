@@ -1,13 +1,13 @@
-const Package = require('../../models/Package');
+const Basket = require('../../models/Basket');
 const ONG = require('../../models/ONG');
 const jwtDecode = require('jwt-decode');
 
 module.exports = {
   list : async (request, response) => {
-    let packages = await Package.find().populate('author').exec();
+    let baskets = await Basket.find().populate('author').exec();
 
     return response.json({
-      packages
+      baskets
     });
   },
 
@@ -17,10 +17,10 @@ module.exports = {
 
     const targetONG = await ONG.findOne({ cnpj });
 
-    let meRequests = await Package.find({ 'author': targetONG._id });
+    let bktsMe = await Basket.find({ 'author': targetONG._id });
 
     return response.json({
-      packages: meRequests
+      baskets: bktsMe
     })
   },
 
@@ -37,17 +37,18 @@ module.exports = {
 
     const { _id } = await ONG.findOne({ cnpj });
 
-    const package = await Package.create({
+    const basket = await Basket.create({
       author: _id,
       name,
       description,
-      items
+      items,
+      status: 'Em Andamento'
     });
 
-    await package.populate('author').execPopulate();
+    await basket.populate('author').execPopulate();
 
     return response.json({
-      package
+      Basket
     })
   },
 
@@ -56,11 +57,11 @@ module.exports = {
     const { cnpj } = jwtDecode(token);
     const targetONG = await ONG.findOne({ cnpj });
 
-    const _id = request.headers['x-target-pack-id'];
+    const _id = request.headers['x-target-basket-id'];
 
-    const targetPack = await Package.findById(_id);
+    const targetBasket = await Basket.findById(_id);
 
-    await targetPack.remove();
+    await targetBasket.remove();
     return response.status(200).send();
   }
 };

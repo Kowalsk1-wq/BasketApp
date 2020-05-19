@@ -1,24 +1,24 @@
 <template>
   <q-page class="q-pa-md q-gutter-md justify-evenly">
     <div class="main row itens-center justify-evenly">
-      <q-btn class="add" @click="pack = true" color="green" icon="add" label="Novo Pacote" />
+      <q-btn class="add" @click="basket = true" color="green" icon="add" label="Novo Pacote" />
       
-      <q-list bordered class="rounded-borders" style="max-width: 600px">
-        <q-item-label header>Meus Pacotes</q-item-label>
+      <q-list bordered class="rounded-borders" style="max-width: 100%">
+        <q-item-label class="headerItem align-center" header>Minhas Cestas</q-item-label>
 
-        <PackageItem v-for="p in packs" :key="p.name" v-bind="p" />
+        <BasketItem v-for="b in baskets" :key="b.name" v-bind="b" />
       </q-list>
     </div>
 
-    <q-dialog v-model="pack" persistent>
-      <q-card style="min-width: 350px; max-height: 450px;">
+    <q-dialog v-model="basket" persistent>
+      <q-card class="createPack">
         <q-card-section>
-          <div class="text-h6">Novo Pacote</div>
+          <div class="text-h6">Nova Cesta</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
           <form id="msform">
-						<q-input type="text" v-model="name" label="Nome do Pacote" />
+						<q-input type="text" v-model="name" label="Nome da Cesta" />
 						<q-input type="text" v-model="description" label="Descrição" />
 						<q-input type="text" v-model="item" label="Item">
 							<template v-slot:after>
@@ -30,18 +30,21 @@
 							<p class="itemTitle">
 								Items Aqui
 							</p>
-
-							<p 
-								v-for="i in items" 
-								:key="i">
-									{{ i.name }} - x{{ i.quantity }} 
-									<q-btn round dense flat icon="delete" @click="deltItem(items.indexOf(i))" />
-							</p>
+              <div class="itemsContainer">
+                <div
+                  class="items"
+                  v-for="i in items" 
+                  :key="i"
+                >
+                  <span><strong>{{ i.name }}</strong> - x{{ i.quantity }}</span> 
+                  <q-btn class="btnDel" round dense flat icon="delete" @click="deltItem(items.indexOf(i))" />
+                </div>
+              </div>
 						</div>
           </form>
         </q-card-section>
         <q-separator />
-        <q-card-actions align="right" class="text-primary">
+        <q-card-actions align="right" class="text-primary actions">
           <q-btn flat label="Cancelar" @click="reset()" v-close-popup />
           <q-btn @click="createPack()" push color="primary" label="Confirmar" />
         </q-card-actions>
@@ -51,17 +54,17 @@
 </template>
 
 <script>
-import PackageItem from 'components/PackageItem'
+import BasketItem from 'components/BasketItem'
 
 export default {
-  name: 'PagePack',
+  name: 'PageBasket',
   components: {
-    PackageItem
+    BasketItem
   },
   data () {
     return {
       token: localStorage.getItem('@accessToken'),
-			pack: false,
+			basket: false,
 			name: '',
 			description: '',
 			item: '',
@@ -82,17 +85,17 @@ export default {
 
 			items: [],
 
-			packs: null
+			baskets: null
     }
 	},
 
 	mounted () {
-		this.$axios.get("http://localhost:4000/requests/me", {
+		this.$axios.get("http://localhost:4000/baskets/me", {
 			headers: {
 				'x-access-token' : this.token
 			}
 		}).then(res => {
-      this.packs = res.data.packages;
+      this.baskets = res.data.baskets;
     });
 	},
 	
@@ -126,7 +129,7 @@ export default {
         items: this.items
       };
 
-			this.$axios.post("http://localhost:4000/requests", {
+			this.$axios.post("http://localhost:4000/baskets", {
         name: data.name,
         description: data.description,
         items: data.items
@@ -157,8 +160,60 @@ export default {
 		}
 	}
 
-  .packs {
-    
+  .createPack {
+    width: 100%;
+    max-width: 840px;
+    height: 540px;
+
+    border-radius: 15px;
+
+    .itemsContainer {
+      position: absolute;
+      width: 95%;
+      height: 180px;
+
+      overflow: auto;
+
+      .items {
+        background-color: #ccc;
+        border-bottom: 0.5px solid #ccc;
+        border-top: 0.5px solid #ccc;
+
+        height: 50px;
+
+        font-size: 18px;
+        font-weight: bold;
+
+        &:nth-child(n+1) {
+          margin-top: 10px;
+        }
+
+        span {
+          position: absolute;
+          margin-top: 10px;
+          left: 15px;
+
+          strong {
+            font-size: 18px;
+          }
+
+          font-size: 14px;
+          font-weight: 400;
+        }
+
+        .btnDel {
+          position: absolute;
+          right: 15px;
+          font-size: 18px;
+        }
+      }
+    }
+
+    .actions {
+      position: absolute;
+      bottom: 0.5px;
+      right: 5px;
+    }
   }
 
   .main {

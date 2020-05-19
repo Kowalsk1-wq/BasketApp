@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const PackageSchema = new Schema({
+const BasketSchema = new Schema({
 	author: {
 		type: Schema.Types.ObjectId,
 		ref: 'ONG',
@@ -20,18 +20,18 @@ const PackageSchema = new Schema({
 	items: [{
 		name: {
 			type: String,
-    	required: [true, 'Item Name is Required!'],
+			required: true,
+			unique: false
 		},
+		quantity: Number
+	}],
 
-		quantity: {
-			type: Number,
-			min: 1,
-			max: 10,
-    	required: [true, 'Item Quantity is Required!']
-		}
-	}]
+	status: {
+		type: String,
+		enum: ['Em Andamento', 'Concluída']
+	}
 }, {
 	timestamps: true
 });
 
-module.exports = model('Package', PackageSchema);
+module.exports = model('Basket', BasketSchema);

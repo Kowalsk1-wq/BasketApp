@@ -15,14 +15,18 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.18.1",
     "quasar": "^1.9.5",
+    "socket.io-client": "^2.3.0",
     "vue-class-component": "^7.2.2",
+    "vue-hooks": "^0.3.2",
     "vue-i18n": "^8.0.0",
     "vue-property-decorator": "^8.3.0",
+    "vue-socket.io": "^3.0.9",
     "vue-sweetalert2": "^3.0.5"
   },
   "devDependencies": {
     "@quasar/app": "^1.6.2",
     "@types/node": "^10.17.15",
+    "@types/socket.io-client": "^1.4.33",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
     "babel-eslint": "^10.0.1",

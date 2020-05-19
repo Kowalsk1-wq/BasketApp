@@ -27,6 +27,7 @@
             <div class="column">
               <div class="text-h6 q-mb-md">Informações</div>
               <span @click="redirect('/ong')">Perfil</span>
+              <span>Doações</span>
             </div>
 
             <q-separator vertical inset class="q-mx-lg" />
@@ -106,7 +107,7 @@ export default {
           id: '2',
           title: 'Pacotes',
           icon: 'folder',
-          link: '/packages'
+          link: '/baskets'
         },
         {
           id: '3',

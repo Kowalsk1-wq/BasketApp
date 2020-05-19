@@ -14,31 +14,38 @@
 
       <q-item-section top side>
         <div class="text-grey-8 q-gutter-xs">
-          <q-btn @click="pack = true" flat color="primary" icon="info" label="Detalhes" />
+          <q-btn @click="basket = true" flat color="primary" icon="info" label="Detalhes" />
         </div>
       </q-item-section>
     </q-item>
 
-    <q-dialog style="width: 100%; height: 100%;" v-model="pack" persistent>
-      <q-card style="min-width: 350px; max-height: 450px; overflow-x: hidden;">
+    <q-dialog style="width: 100%; height: 100%;" v-model="basket" persistent>
+      <q-card style="min-width: 450px; max-height: 450px; overflow-x: hidden;">
         <q-card-section>
           <div class="text-h6">{{ name }}</div>
           <span>{{ description }}</span>
         </q-card-section>
 
-        <h4 class="status">Status: {{ status }}</h4>
+        <q-badge class="badgeStatus" :color="status === 'Em Andamento' ? 'grey' : 'green'">
+          <strong>STATUS</strong>:  {{ status }}
+        </q-badge>
 
         <q-card-section class="q-pt-none">
-          <div class="item" v-for="i in items">
-            <span style="margin-top: 15px; font-weight: bold;">Nome: <a style="font-weight: 400;">{{ i.name }}</a></span><br>
-            <small>>  Quantidade: {{ i.quantity }}</small> 
+          <div class="itemsContainer">
+            <div
+              class="items"
+              v-for="i in items" 
+              :key="i"
+            >
+              <span><strong>{{ i.name }}</strong> - x{{ i.quantity }}</span> 
+            </div>
           </div>
         </q-card-section>
         <q-separator />
         <q-card-actions align="right" class="text-primary">
           <q-btn flat title="Fechar" icon="close" v-close-popup />
-          <q-btn flat title="Ver Status" icon="access_time" />
-          <q-btn push title="Confirmar Doação" color="primary" icon="done" />
+          <q-btn v-if="status !== 'Concluída'" flat title="Ver Status" icon="access_time" />
+          <q-btn v-if="status !== 'Concluída'" push title="Confirmar Doação" color="primary" icon="done" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -47,11 +54,11 @@
 
 <script>
 export default {
-  name: 'PackageItem',
+  name: 'BasketItem',
 
   data() {
     return {
-      pack: false,
+      basket: false,
       token: null
     }
   },
@@ -72,15 +79,18 @@ export default {
     },
     items: {
       type: String
+    },
+    status: {
+      type: String
     }
   },
 
   methods: {
     handleDelete(id) {
-      this.$axios.delete('http://localhost:4000/requests', {
+      this.$axios.delete('http://localhost:4000/baskets', {
         headers: {
           'x-access-token' : this.token,
-          'x-target-pack-id' : id
+          'x-target-basket-id' : id
         }
       })
     }
@@ -89,14 +99,44 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .badgeStatus {
+    position: absolute;
+    top: 88%;
+    left: 15px;
+
+    border-radius: 15px;
+  }
+
   .item {
-    width: 650px;
+    width: 100%;
     border-left: 2px solid #000;
+  }
 
-    margin: 15px 0 15px 0;
+  .items {
+    background-color: #ccc;
+    border-bottom: 0.5px solid #ccc;
+    border-top: 0.5px solid #ccc;
 
-    @media (max-width: 768px) {
-      width: 450px;
+    height: 50px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    &:nth-child(n+1) {
+      margin-top: 10px;
+    }
+
+    span {
+      position: absolute;
+      margin-top: 10px;
+      left: 15px;
+
+      strong {
+        font-size: 18px;
+      }
+
+      font-size: 14px;
+      font-weight: 400;
     }
   }
 

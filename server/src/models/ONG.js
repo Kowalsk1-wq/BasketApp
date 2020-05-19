@@ -52,7 +52,7 @@ const ONGSchema = new Schema({
   	type: String,
   	validate: {
       validator: function(v) {
-        return /(\d{2}) \d{5}-\d{4}/.test(v);
+        return /\(\d{2,}\) \d{4,}\ - \d{4}/g.test(v);
       },
       message: props => `${props.value} is not a valid phone number!`
     },

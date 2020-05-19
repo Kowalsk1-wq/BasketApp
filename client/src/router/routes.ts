@@ -72,8 +72,8 @@ const routes: RouteConfig[] = [
         component: () => import('pages/ONGs/Main.vue')
       },
       {
-        path: 'packages',
-        component: () => import('pages/ONGs/Packages.vue')
+        path: 'baskets',
+        component: () => import('pages/ONGs/Baskets.vue')
       },
       {
         path: 'ong',

@@ -8,7 +8,10 @@ const verifyJWT = require('../middlewares/verifyJWT');
 const AppController = require('../controllers/AppController');
 const AuthController = require('../controllers/AuthController');
 const OngController = require('../controllers/OngController');
-const ReqController = require('../controllers/RequestController');
+const BasketController = require('../controllers/BasketController');
+const DonationController = require('../controllers/DonationController/index.js');
+const ApprovalController = require('../controllers/DonationController/ApprovalController.js');
+const RejectionController = require('../controllers/DonationController/RejectionController.js');
 
 routes.get('/', AppController.info);
 
@@ -25,9 +28,14 @@ routes.post('/ongs/auth/activate', OngController.active);
 routes.put('/ongs', verifyJWT, OngController.update);
 routes.delete('/ongs', verifyJWT, OngController.delete);
 
-routes.get('/requests', verifyJWT, ReqController.list);
-routes.get('/requests/me', verifyJWT, ReqController.listMe);
-routes.post('/requests', verifyJWT, ReqController.create);
-routes.delete('/requests', verifyJWT, ReqController.delete);
+routes.get('/baskets', verifyJWT, BasketController.list);
+routes.get('/baskets/me', verifyJWT, BasketController.listMe);
+routes.post('/baskets', verifyJWT, BasketController.create);
+routes.delete('/baskets', verifyJWT, BasketController.delete);
+
+routes.post('/baskets/:basket_id/donations', DonationController.store);
+
+routes.post('/donations/:donation_id/approvals', ApprovalController.store);
+routes.post('/donations/:donation_id/rejections', RejectionController.store);
 
 module.exports = routes;
