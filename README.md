@@ -1,6 +1,6 @@
 # BasketApp
 
-Doe Cestas Básicas, Faça a Diferença, Salve Vidas!
+Donate Baskets, Make a Difference, Save Lives!
 
 ## Features
 
