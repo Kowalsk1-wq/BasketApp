@@ -16,9 +16,9 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
-
       'i18n',
-      'axios'
+      'axios',
+      'sweetalert'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css

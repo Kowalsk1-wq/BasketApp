@@ -5,18 +5,24 @@
       <!-- fieldsets -->
       <fieldset>
         <h2 class="fs-title">Vamos Criar Sua Conta!!</h2>
-        <q-input class="input" outlined type="email" v-model="email" placeholder="Email" />
-        <q-input class="input" outlined type="text" v-model="cnpj" placeholder="CNPJ" />
-        <q-input class="input" outlined type="password" v-model="pwd" placeholder="Senha" />
-        <q-input class="input" outlined type="password" v-model="rPwd" placeholder="Confirme a Senha" />
+        <q-input class="input" outlined type="text" v-model="razao_social" label="Razão Social" />
+        <q-input class="input" outlined type="email" v-model="email" label="Email" />
+        <q-input class="input" outlined type="text" mask="##.###.###/####-##" v-model="cnpj" label="CNPJ" />
+        <q-input class="input" outlined type="text" mask="(##) ##### - ####" v-model="telefone" label="Telefone" />
+        <q-input class="input" outlined type="text" mask="#####-###" v-model="cep" label="CEP" />
+        <q-input class="input" outlined type="text" v-model="logradouro" label="Logradouro" />
+        <q-input class="input" outlined type="text" v-model="bairro" label="Bairro" />
+        <q-input class="input" outlined type="text" v-model="complemento" label="Complemento" />
+        <q-input class="input" outlined type="text" v-model="numero" label="Número" />
+        <q-select behavior="dialog" outlined style="margin-bottom: 10px;" v-model="estado" :options="states" label="Estado" />
+        <q-input class="input" outlined type="text" v-model="cidade" label="Cidade" />
+
         <q-separator /><br>
-        <h2 class="fs-title">Detalhes Sobre a Sua ONG</h2>
-        <h3 class="fs-subtitle"></h3>
-        <q-input class="input" outlined type="text" v-model="ongName" placeholder="Nome da ONG" />
-        <q-input class="input" outlined type="text" v-model="repName" placeholder="Nome do Representante" />
-        <q-input class="input" outlined type="text" v-model="phone" mask="(##) ##### - ####" placeholder="Telefone" />
-        <q-input class="input" outlined type="text" v-model="city" placeholder="Cidade" />
-        <q-input class="input" outlined type="text" v-model="uf" placeholder="Estado" />
+
+        <h2 class="fs-title">Agora Digite sua Senha!</h2>
+
+        <q-input class="input" outlined type="text" v-model="senha" label="Senha" />
+        <q-input class="input" outlined type="password" v-model="rSenha" label="Confirme a Senha" />
 
         <q-separator /><br>
 
@@ -24,6 +30,7 @@
           <p style="margin-bottom: 15px; font-weight: bold; font-size: 20px;">Foto de Perfil</p>
           <input type="file" @change="onFileSelected" >
         </div>
+
         <q-separator /><br>
         <input type="submit" name="submit" class="submit action-button" value="Cadastrar" />
       </fieldset>
@@ -37,15 +44,49 @@ export default {
   components: {},
   data() {
     return {
-      email: '',
-      cnpj: '',
-      pwd: '',
-      rPwd: '',
-      ongName: '',
-      repName: '',
-      phone: '',
-      city: '',
-      uf: '',
+      razao_social: null,
+      cnpj: null,
+      email: null,
+      senha: null,
+      rSenha: null,
+      telefone: null,
+      cep: null,
+      logradouro: null,
+      bairro: null,
+      complemento: null,
+      cidade: null,
+      estado: null,
+      numero: null,
+
+      states: [
+        "Acre",
+        "Alagoas",
+        "Amapá",
+        "Amazonas",
+        "Bahia",
+        "Ceará",
+        "Distrito Federal",
+        "Espírito Santo",
+        "Goiás",
+        "Maranhão",
+        "Mato Grosso",
+        "Mato Grosso do Sul",
+        "Minas Gerais",
+        "Pará",
+        "Paraíba",
+        "Paraná",
+        "Pernambuco",
+        "Piauí",
+        "Rio de Janeiro",
+        "Rio Grande do Norte",
+        "Rio Grande do Sul",
+        "Rondônia",
+        "Roraima",
+        "Santa Catarina",
+        "São Paulo",
+        "Sergipe",
+        "Tocantins"
+      ],
 
       selectedFile: null
     }
@@ -56,29 +97,49 @@ export default {
       this.selectedFile = ev.target.files[0]
     },
 
-    onSignUp() {
-      if (this.pwd !== this.rPwd) {
-        alert('Passwords Not Matching!');
+    async onSignUp() {
+      if (this.senha !== this.rSenha) {
+        this.$swal({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Senhas Não Conferem!',
+        });
       } else {
         const data = new FormData();
         data.append('file', this.selectedFile, this.selectedFile.name);
-        data.append('name', this.ongName);
-        data.append('repName', this.repName);
+        data.append('razao_social', this.razao_social);
         data.append('cnpj', this.cnpj);
         data.append('email', this.email);
-        data.append('password', this.pwd);
-        data.append('phone', this.phone);
-        data.append('city', this.city);
-        data.append('uf', this.uf);
+        data.append('senha', this.senha);
+        data.append('telefone', this.telefone);
+        data.append('cep', this.cep);
+        data.append('logradouro', this.logradouro);
+        data.append('bairro', this.bairro);
+        data.append('complemento', this.complemento);
+        data.append('cidade', this.cidade);
+        data.append('estado', this.estado);
+        data.append('numero', this.numero);
 
-        this.$axios.post('http://localhost:4000/ongs', data).then(res => {
-          console.log(res.data);
+        await this.$axios
+            .post('http://localhost:4040/sessions/ong', data)
+              .then(() => {
+                this.$swal({
+                  icon: 'success',
+                  title: 'Obaa!',
+                  text: 'Sua Inscrição como ONG foi Efetuada.',
+                  footer: '<small>Por Favor, Verifique Seu Email!</small>'
+                });
 
-          localStorage.setItem('@OngEmail', res.data.email);
-          localStorage.setItem('@OngCnpj', res.data.cnpj);
-
-          this.$router.push({ path: '/ong-active' });
-        });
+                localStorage.setItem('@CNPJ', this.cnpj);
+              })
+              .catch(() => {
+                this.$swal({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Não Foi Possível Realizar o Cadastro!',
+                  footer: '<small>Tente Novamente</small>'
+                });
+              })
       }
     }
   }
@@ -122,8 +183,6 @@ export default {
   }
   /*inputs*/
   #msform .input {
-    padding: 15px;
-    border: 1px solid #ccc;
     border-radius: 3px;
     margin-bottom: 10px;
     width: 100%;

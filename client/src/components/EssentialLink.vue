@@ -6,6 +6,7 @@
 
     <q-item-section>
       <q-item-label>{{ title }}</q-item-label>
+      <small>{{ caption }}</small>
     </q-item-section>
   </q-item>
 </template>
@@ -21,6 +22,9 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    caption: {
+      type: String
     },
     link: {
       type: String,

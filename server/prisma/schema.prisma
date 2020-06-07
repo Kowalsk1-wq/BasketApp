@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model doacao {
+  approved   Boolean   @default(false)
+  cnpj_ong   String?
+  createdAt  DateTime  @default(now())
+  descricao  String
+  id_doador  String?
+  numero     String    @id
+  quantidade Int
+  titulo     String
+  ong        ong?      @relation(fields: [cnpj_ong], references: [cnpj])
+  doador     doador?   @relation(fields: [id_doador], references: [id])
+  produto    produto[]
+}
+
+model doador {
+  active          Boolean           @default(false)
+  cidade          String
+  email           String
+  estado          String
+  foto            String
+  hashdelete      String
+  id              String            @id
+  senha           String
+  telefone        String
+  doacao          doacao[]
+  pessoa_fisica   pessoa_fisica[]
+  pessoa_juridica pessoa_juridica[]
+}
+
+model ong {
+  active       Boolean  @default(false)
+  bairro       String
+  cep          String
+  cidade       String
+  cnpj         String   @id
+  complemento  String
+  email        String
+  estado       String
+  foto         String
+  hashdelete   String
+  logradouro   String
+  numero       String
+  razao_social String
+  senha        String
+  telefone     String
+  doacao       doacao[]
+}
+
+model pessoa_fisica {
+  cpf        String  @id
+  genero     String
+  id_doador  String?
+  nascimento String
+  nome       String
+  sobrenome  String
+  doador     doador? @relation(fields: [id_doador], references: [id])
+}
+
+model pessoa_juridica {
+  cnpj         String  @id
+  id_doador    String?
+  razao_social String
+  doador       doador? @relation(fields: [id_doador], references: [id])
+}
+
+model produto {
+  descricao     String
+  id            String  @id
+  numero_doacao String?
+  quantidade    Int
+  doacao        doacao? @relation(fields: [numero_doacao], references: [numero])
+}

@@ -1,13 +1,19 @@
 <template>
   <q-page class="row items-center justify-evenly">
+    <span class="ong" @click="redirect('/auth-ong')" >Entrar Como ONG  <q-icon name="arrow_forward_ios" /></span>
     <!-- multistep form -->
-    <form id="msform" @submit="onSubmit" @reset="onReset">
-      <!-- fieldsets -->
-      <fieldset>
+    <form id="msform" @submit.prevent="onSubmit" @reset="onReset">
+      <fieldset v-if="tipo === 'Pessoa Física'">
         <h2 class="fs-title">Entrar</h2>
         <h3 class="fs-subtitle">Preencha os Campos Abaixo!</h3>
-        <input type="text" v-model="email" name="email" placeholder="Email" />
-        <input type="password" v-model="pwd" name="pass" placeholder="Senha" />
+        <q-input required class="input" outlined type="text" mask="###.###.###-##" v-model="cpf" label="CPF" />
+        <q-input required class="input" outlined type="password" v-model="pwd" name="pass" label="Senha" />
+
+        <q-separator /><br>
+
+        <q-select outlined style="margin-bottom: 10px;" v-model="tipo" :options="tiposUsuario" label="Tipo de Usuário" />
+
+        <q-separator /><br>
 
         <q-toggle v-model="accept" label="Eu Aceito os Termos de Licença!" />
 
@@ -17,8 +23,26 @@
           <q-btn label="Limpar" type="reset" color="primary" flat class="q-ml-sm" />
         </div>
       </fieldset>
-      
-      <span @click="redirect('/auth-ong')" class="ong">És uma ONG?</span>
+      <fieldset v-if="tipo === 'Pessoa Jurídica'">
+        <h2 class="fs-title">Entrar</h2>
+        <h3 class="fs-subtitle">Preencha os Campos Abaixo!</h3>
+        <q-input required class="input" outlined type="text" mask="##.###.###/####-##" v-model="cnpj" label="CNPJ" />
+        <q-input required class="input" outlined type="password" v-model="pwd" name="pass" label="Senha" />
+
+        <q-separator /><br>
+
+        <q-select outlined style="margin-bottom: 10px;" v-model="tipo" :options="tiposUsuario" label="Tipo de Usuário" />
+
+        <q-separator /><br>
+
+        <q-toggle v-model="accept" label="Eu Aceito os Termos de Licença!" />
+
+        <br>
+        <div>
+          <q-btn label="Entrar" type="submit" color="primary"/>
+          <q-btn label="Limpar" type="reset" color="primary" flat class="q-ml-sm" />
+        </div>
+      </fieldset>  
     </form>
   </q-page>
 </template>
@@ -31,31 +55,75 @@ export default {
   components: {},
   data() {
     return {
-      email: null,
+      cpf: null,
+      cnpj: null,
       pwd: null,
+
+      tiposUsuario: [
+        'Pessoa Física', 'Pessoa Jurídica'
+      ],
+
+      tipo: 'Pessoa Física',
 
       accept: false
     }
   },
 
   methods: {
-    onSubmit (e) {
-      e.preventDefault();
-
+    onSubmit () {
       if (this.accept !== true) {
-        alert('You need to accept the license and terms first');
+        this.$swal({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Você não Aceitou os Termos!',
+        });
       }
       else {
-        this.$axios.post('http://localhost:4000/users/auth', {
-          email: this.email,
-          password: this.pwd
-        }).then(response => {
-          login(response.data.token, response.data.user);
+        if (this.tipo === 'Pessoa Física') {
+          this.$axios.post('http://localhost:4040/sessions/auth/pf', {
+            cpf: this.cpf,
+            senha: this.pwd
+          }).then(response => {
+            login(response.data.token, response.data.user);
 
-          this.$router.push({path: '/app'});
-        }).catch(err => {
-          console.log(err);
-        })
+            this.$router.push({path: '/app'});
+          }).catch(err => {
+            this.$swal({
+              icon: 'error',
+              title: 'Oops...',
+              text: `Algo Deu Errado!!`,
+              footer: 
+              err.response.status 
+                === 401 ? 
+              'Você Não Ativou a Sua Conta!' 
+                : 
+              err.response.status 
+                === 404 ? 
+              'Usuário Não Existe' 
+                : 
+              err.response.status
+                === 403 ?
+              'Dados Incorretos'
+                :
+              err.response.status
+            });
+          })
+        } else {
+          this.$axios.post('http://localhost:4040/sessions/auth/pj', {
+            cnpj: this.cnpj,
+            senha: this.pwd
+          }).then(response => {
+            login(response.data.token, response.data.user);
+
+            this.$router.push({ path: '/app' });
+          }).catch(err => {
+            this.$swal({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Algo Deu Errado!!',
+            });
+          })
+        }
       }
     },
 
@@ -79,22 +147,12 @@ export default {
   /*basic reset*/
   * {margin: 0; padding: 0;}
 
-  html {
-    height: 100%;
-    /*Image only BG fallback*/
-    
-    /*background = gradient + image pattern combo*/
-    background: 
-      linear-gradient(rgba(196, 102, 0, 0.6), rgba(155, 89, 182, 0.6));
-  
-  }
-
   body {
     font-family: montserrat, arial, verdana;
   }
   /*form styles*/
   #msform {
-    width: 400px;
+    width: 890px;
     margin: 50px auto;
     text-align: center;
     position: relative;
@@ -118,9 +176,7 @@ export default {
     display: none;
   }
   /*inputs*/
-  #msform input, #msform textarea {
-    padding: 15px;
-    border: 1px solid #ccc;
+  #msform .input {
     border-radius: 3px;
     margin-bottom: 10px;
     width: 100%;
@@ -146,11 +202,10 @@ export default {
   }
   /*headings*/
   .fs-title {
-    font-size: 18px;
+    font-size: 15px;
     text-transform: uppercase;
     color: #2C3E50;
     margin-bottom: 10px;
-    font-weight: bold;
   }
   .fs-subtitle {
     font-weight: normal;
@@ -209,18 +264,15 @@ export default {
   }
 
   .ong {
-    position: absolute;
-    top: 420px;
-    left: 50%;
+    position: fixed;
+    top: 80%;
+    right: 15px;
 
     transform: translate(-50%, -50%);
 
-    font-size: 20px;
-
     &:hover {
       cursor: pointer;
-      text-decoration: underline;
-      font-weight: bold;
+      text-decoration: underline #ddd;
     }
   }
 </style>

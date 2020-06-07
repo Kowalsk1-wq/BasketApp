@@ -1,13 +1,13 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <!-- multistep form -->
-    <form id="msform" @submit="onSubmit" @reset="onReset">
+    <form id="msform" @submit.prevent="onSubmit" @reset="onReset">
       <!-- fieldsets -->
       <fieldset>
         <h2 class="fs-title">Entrar</h2>
         <h3 class="fs-subtitle">Preencha os Campos Abaixo!</h3>
-        <input type="text" v-model="cnpj" name="CNPJ" placeholder="CNPJ" />
-        <input type="password" v-model="pwd" name="pass" placeholder="Senha" />
+        <q-input required class="input" outlined type="text" mask="##.###.###/####-##" v-model="cnpj" label="CNPJ" />
+        <q-input required class="input" outlined type="password" v-model="pwd" name="pass" label="Senha" />
 
         <q-toggle v-model="accept" label="Eu Aceito os Termos de Licença!" />
 
@@ -39,28 +39,34 @@ export default {
   },
 
   methods: {
-    onSubmit (e) {
-      e.preventDefault();
-
+    onSubmit () {
       if (this.accept !== true) {
-        alert('You need to accept the license and terms first');
-      }
-      else {
-        this.$axios.post('http://localhost:4000/ongs/auth', {
+        this.$swal({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Você não Aceitou os Termos!',
+        });
+      } else {
+        this.$axios.post('http://localhost:4040/sessions/auth/ong', {
           cnpj: this.cnpj,
-          password: this.pwd
+          senha: this.pwd
         }).then(response => {
-          ONGlogin(response.data.token, response.data.ong);
+          ONGlogin(response.data.token, response.data.user)
 
-          this.$router.push({path: '/main'});
+          this.$router.push({path: '/main'})
         }).catch(err => {
-          console.log(err);
+          this.$swal({
+            icon: 'error',
+            title: 'Oops...',
+            text: `Algo Deu Errado!!`,
+            footer: err.response.status === 401 ? 'Você Não Ativou a Sua Conta!' : err.response.status === 404 ? 'ONG Não Existe!' : err.response.status === 406 ? 'Verifique os Seus Dados!' : err.response.status
+          });
         })
       }
     },
 
     onReset () {
-      this.id = null
+      this.cnpj = null
       this.pwd = null
       this.accept = false
     },
@@ -94,7 +100,7 @@ export default {
   }
   /*form styles*/
   #msform {
-    width: 400px;
+    width: 890px;
     margin: 50px auto;
     text-align: center;
     position: relative;
@@ -118,9 +124,7 @@ export default {
     display: none;
   }
   /*inputs*/
-  #msform input, #msform textarea {
-    padding: 15px;
-    border: 1px solid #ccc;
+  #msform .input {
     border-radius: 3px;
     margin-bottom: 10px;
     width: 100%;
@@ -210,7 +214,7 @@ export default {
 
   .ong {
     position: absolute;
-    top: 420px;
+    top: 435px;
     left: 50%;
 
     transform: translate(-50%, -50%);

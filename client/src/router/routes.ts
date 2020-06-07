@@ -14,8 +14,8 @@ const routes: RouteConfig[] = [
         component: () => import('pages/Users/Register.vue') 
       },
       {
-        path: 'active',
-        component: () => import('pages/Users/Active.vue')
+        path: 'user-active',
+        component: () => import('pages/Users/Actived.vue')
       },
       { 
         path: 'auth-ong', 
@@ -26,8 +26,8 @@ const routes: RouteConfig[] = [
         component: () => import('pages/ONGs/Register.vue') 
       },
       {
-        path: 'ong-active',
-        component: () => import('pages/ONGs/Active.vue')
+        path: 'ong-actived',
+        component: () => import('pages/ONGs/Actived.vue')
       }
     ]
   },
@@ -41,24 +41,8 @@ const routes: RouteConfig[] = [
         component: () => import('pages/Users/Index.vue')
       },
       {
-        path: 'requests',
-        component: () => import('pages/Users/Explore.vue')
-      },
-      {
-        path: 'settings',
-        component: () => import('pages/Users/Config.vue')
-      },
-      { 
-        path: 'me', 
-        component: () => import('pages/Users/Me.vue') 
-      },
-      { 
-        path: 'donations', 
-        component: () => import('pages/Users/Donations.vue') 
-      },
-      { 
-        path: 'relatories', 
-        component: () => import('pages/Users/Relatories.vue') 
+        path: 'donation',
+        component: () => import('pages/Users/Donation.vue')
       }
     ]
   },
@@ -73,11 +57,11 @@ const routes: RouteConfig[] = [
       },
       {
         path: 'baskets',
-        component: () => import('pages/ONGs/Baskets.vue')
+        component: () => import('pages/ONGs/Basket.vue')
       },
       {
-        path: 'ong',
-        component: () => import('pages/ONGs/Me.vue')
+        path: 'approved',
+        component: () => import('pages/ONGs/Approved.vue')
       }
     ]
   }

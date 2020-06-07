@@ -1,39 +1,48 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <div class="general">
-      <h5>Bem-Vindo <strong>{{ ong.name }}</strong>!</h5>
-      <q-avatar class="avatar" @click="toolbar = true" size="150px">
-        <img :src="ong.picture">
-      </q-avatar>
+      <h5>Bem-Vindo <strong>{{ ong.razao_social }}</strong>!</h5>
       <p>
         <strong>Informações Gerais</strong>
+        <q-list>
+          <q-item-label header class="text-white headerBar">
+            
+          </q-item-label>
+          <EssentialLink
+            v-for="link in essentialLinks"
+            :key="link.title"
+            v-bind="link"
+          />
+      </q-list>
       </p>
     </div>
-
-    <q-dialog v-model="toolbar">
-      <q-card class="my-card" flat bordered>
-      <q-card-section horizontal>
-        <q-img
-          class="col"
-          :src="ong.picture"
-        />
-
-        <q-card-actions vertical class="justify-around q-px-md">
-          <q-btn flat round color="blue" title="Ver Perfil" icon="person" />
-          <q-btn flat round color="grey" title="Cestas" icon="folder" />
-        </q-card-actions>
-      </q-card-section>
-    </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
 <script>
+import EssentialLink from 'components/EssentialLink'
+
 export default {
   name: 'PageMain',
-  components: {},
+  components: {
+    EssentialLink
+  },
   data() {
     return {
+      essentialLinks: [
+        {
+          id: '1',
+          title: 'Doações',
+          icon: 'shopping_basket',
+          caption: 'Aqui é o Lugar Onde Você Vai Encontrar Pessoas de Bom Coração!'
+        },
+        {
+          id: '2',
+          title: 'Configurações',
+          icon: 'settings',
+          caption: 'Personalize o seu BasketApp 😉'
+        }
+      ],
       ong: null,
       toolbar: false
     }

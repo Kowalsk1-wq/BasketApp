@@ -15,41 +15,6 @@
           BasketApp
           <q-badge color="secondary" align="top">ONG Edition</q-badge>
         </q-toolbar-title>
-        
-        <q-btn-dropdown
-          flat
-          style="position: absolute; right: 15px;"
-          class="absolute-right"
-          color="default"
-          label="Conta"
-        >
-          <div class="row no-wrap q-pa-md">
-            <div class="column">
-              <div class="text-h6 q-mb-md">Informações</div>
-              <span @click="redirect('/ong')">Perfil</span>
-              <span>Doações</span>
-            </div>
-
-            <q-separator vertical inset class="q-mx-lg" />
-
-            <div class="column items-center">
-              <q-avatar size="72px">
-                <img :src="ong.picture" />
-              </q-avatar>
-
-              <div class="text-subtitle1 q-mt-md q-mb-xs">{{ ong.name }}</div>
-
-              <q-btn
-                color="primary"
-                label="Sair"
-                push
-                size="sm"
-                @click="handleLogOut"
-                v-close-popup
-              />
-            </div>
-          </div>
-        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 
@@ -57,6 +22,14 @@
       v-model="leftDrawerOpen"
       show-if-above
     >
+      <div class="ong column items-center">
+        <q-avatar size="72px">
+          <img :src="ong.foto" />
+        </q-avatar>
+
+        <div class="text-subtitle1 q-mt-md q-mb-xs">{{ ong.razao_social }}</div>
+      </div>
+
       <q-list>
         <q-item-label header class="text-white headerBar">
           
@@ -66,6 +39,10 @@
           :key="link.title"
           v-bind="link"
         />
+
+        <q-separator inset class="q-mx-lg" />
+
+        <q-btn @click="handleLogOut" align="between" class="sair btn-fixed-width" color="primary" label="Sair" icon="exit_to_app" />
       </q-list>
     </q-drawer>
 
@@ -105,15 +82,20 @@ export default {
         },
         {
           id: '2',
-          title: 'Pacotes',
-          icon: 'folder',
+          title: 'Doações',
+          icon: 'shopping_basket',
           link: '/baskets'
         },
         {
           id: '3',
-          title: 'Status das Doações',
-          icon: 'schedule',
-          link: ''
+          title: 'Doações Aprovadas',
+          icon: 'check_box',
+          link: '/approved'
+        },
+        {
+          id: '4',
+          title: 'Configurações',
+          icon: 'settings'
         }
       ],
       ong: null
@@ -144,6 +126,11 @@ export default {
     }
   }
 
+  .ong {
+    background-color: #1976D2;
+    padding: 50px 15px 15px 15px;
+  }
+
   .headerBar {
     background-color: #1976D2;
     height: 50px;
@@ -151,6 +138,13 @@ export default {
   
   .main {
     background-color: #FFFDF7;
+  }
+
+  .sair {
+    position: absolute;
+    bottom: 50px;
+    left: 30%;
+    transform: translateX(-50%, -50%);
   }
 
   .expansion {

@@ -13,11 +13,7 @@ Doe Cestas Básicas, Faça a Diferença, Salve Vidas!
   * [x] LogOut do Usuário
   * [x] Remoção da Conta do Usuário
 
-* [ ] Criação, Remoção, Validação e Atualização de Requests por parte das ONGs
-* [ ] Doações referentes aos itens de cada Request feita pelos Usuários Cadastrados
-* [ ] Live-Chat Para que os Usuários troquem informações com a ONG acerca de sua Doação
-* [ ] ONG deve verificar as doações e fechar os Pacotes.
-* [ ] em resposta as Requests das ONGs, Os Usuários deve criar Receituários Contendo os itens que eles (Usuários) vão doar para as ONGs.
+* [ ] O Usuário 
 
 ## Config
 
@@ -30,8 +26,8 @@ Doe Cestas Básicas, Faça a Diferença, Salve Vidas!
 
 ```sh
 cd server
-npm install
-npm run dev
+yarn
+yarn start
 ```
 
 #### Client
@@ -47,14 +43,10 @@ quasar dev
 #### Back-end
 * [Node.js](https://nodejs.org/en/)
 * [Express](http://expressjs.com/)
-* [Knex.js](http://knexjs.org/)
-  * A "batteries included" SQL query builder for Postgres, MSSQL, MySQL, MariaDB, SQLite3, Oracle, and Amazon Redshift designed to be flexible, portable, and fun to use
-* [Socket.io](https://socket.io/)
-  * Realtime server events
+* [Prisma 2](https://www.prisma.io/)
+  * Prisma is an open-source database toolkit. It replaces traditional ORMs and makes database access easy with an auto-generated query builder for TypeScript & Node.js.
 * [Multer](https://github.com/expressjs/multer)
   * Node.js middleware for handling multipart/form-data.
-* [Sharp](https://sharp.pixelplumbing.com/)
-  * High performance Node.js image processing
 
 #### Front-end
 
@@ -63,5 +55,3 @@ quasar dev
 
 * [Vue.JS](https://vuejs.org/)
 * [Quasar](https://quasar.dev/)
-* [socket.io-client](https://github.com/socketio/socket.io-client)
-  * Realtime client

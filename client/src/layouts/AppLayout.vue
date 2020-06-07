@@ -14,50 +14,25 @@
         <q-toolbar-title class="absolute-center">
           BasketApp
         </q-toolbar-title>
-        
-        <q-btn-dropdown
-          flat
-          class="absolute-right"
-          color="default"
-          label="Conta"
-        >
-          <div class="row no-wrap q-pa-md">
-            <div class="column">
-              <div class="text-h6 q-mb-md">Informações</div>
-              <span @click="redirect('/me')">Perfil</span>
-              <span @click="redirect('/donations')">Doações</span>
-              <span @click="redirect('/relatories')">Relatórios</span>
-            </div>
-
-            <q-separator vertical inset class="q-mx-lg" />
-
-            <div class="column items-center">
-              <q-avatar size="72px">
-                <img :src="user.picture" />
-              </q-avatar>
-
-              <div class="text-subtitle1 q-mt-md q-mb-xs">{{ user.firstName }} {{ user.lastName }}</div>
-
-              <q-btn
-                color="primary"
-                label="Sair"
-                push
-                size="sm"
-                @click="handleLogOut"
-                v-close-popup
-              />
-            </div>
-          </div>
-        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
       content-class="bg-grey-1"
     >
+      <div class="user column items-center">
+        <q-avatar size="72px">
+          <img :src="user.doador.foto" />
+        </q-avatar>
+
+        <div class="text-subtitle1 text-white q-mt-md q-mb-xs">{{ user.nome }} {{ user.sobrenome }}</div>
+        <div class="text-subtitle1 text-white q-mt-md q-mb-xs">{{ user.razao_social }}</div>
+      </div>
+
+      <q-separator inset class="q-mx-lg" />
+
       <q-list>
         <q-item-label header class="text-white headerBar">
           
@@ -68,6 +43,10 @@
           v-bind="link"
         />
       </q-list>
+
+      <q-separator inset class="q-mx-lg" />
+
+      <q-btn @click="handleLogOut" align="between" class="sair btn-fixed-width" color="primary" label="Sair" icon="exit_to_app" />
     </q-drawer>
 
     <q-page-container>
@@ -75,7 +54,7 @@
     </q-page-container>
 
     <div class="copyright">
-      <span>@Rocktech.IO | {{ year }}</span>
+      <span>@Rocket.IO | {{ year }}</span>
     </div>
   </q-layout>
 </template>
@@ -106,14 +85,14 @@ export default {
         },
         {
           id: '2',
-          title: 'ONG Explorer',
-          icon: 'explore',
-          link: '/requests'
+          title: 'Efetuar Doação',
+          icon: 'folder',
+          link: '/donation'
         },
         {
           id: '3',
-          title: 'Verificar Doações',
-          icon: 'attach_money',
+          title: 'Status das Doações',
+          icon: 'schedule',
           link: '/requests'
         },
         {
@@ -151,9 +130,16 @@ export default {
     }
   }
 
-  .headerBar {
+  .user {
     background-color: #1976D2;
-    height: 50px;
+    padding: 50px 15px 15px 15px;
+  }
+
+  .sair {
+    position: absolute;
+    bottom: 50px;
+    left: 30%;
+    transform: translateX(-50%, -50%);
   }
   
   .main {
