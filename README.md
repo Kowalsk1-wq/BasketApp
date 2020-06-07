@@ -48,7 +48,9 @@ quasar dev
 
 #### Back-end
 * [Node.js](https://nodejs.org/en/)
+  * Node.js JavaScript runtime
 * [Express](http://expressjs.com/)
+  * Fast, unopinionated, minimalist web framework for Node.js
 * [Prisma 2](https://www.prisma.io/)
   * Prisma is an open-source database toolkit. It replaces traditional ORMs and makes database access easy with an auto-generated query builder for TypeScript & Node.js.
 * [Multer](https://github.com/expressjs/multer)
