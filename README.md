@@ -60,4 +60,6 @@ quasar dev
 ##### Web
 
 * [Vue.JS](https://vuejs.org/)
+  * The Progressive JavaScript Framework
 * [Quasar](https://quasar.dev/)
+  * Build high-performance VueJS user interfaces in record time
