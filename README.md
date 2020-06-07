@@ -13,7 +13,13 @@ Doe Cestas Básicas, Faça a Diferença, Salve Vidas!
   * [x] LogOut do Usuário
   * [x] Remoção da Conta do Usuário
 
-* [ ] O Usuário 
+* [x] O Usuário poderá fazer doações
+
+* [x] A ONG Receberá estas doações
+
+* [x] A ONG Entrará em contato com o doador para acertar os parâmetros de entrega das doações
+
+* [x] A ONG Notificará ao BasketApp que a doação foi entregue com sucesso
 
 ## Config
 
