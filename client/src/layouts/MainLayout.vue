@@ -6,47 +6,13 @@
           BasketApp
           <q-badge v-if="this.isONG() === true" color="secondary" align="top">ONG Edition</q-badge>
         </q-toolbar-title>
-
-        <q-btn 
-          push 
-          color="default" 
-          label="Cadastrar" 
-          @click="redirect('/signup')"
-          v-if="this.isSignUp() === false && isONG() === false"
-          class="btnEntry"
-        />
-
-        <q-btn 
-          push 
-          color="default" 
-          label="Entrar" 
-          @click="redirect('/')"
-          v-if="this.isSignUp() === true && isONG() === false"
-          class="btnEntry"
-        />
-
-        <q-btn 
-          push 
-          color="default" 
-          label="Cadastre Sua ONG" 
-          @click="redirect('/signup-ong')"
-          v-if="this.isSignUp() === false && isONG() === true"
-          class="btnEntry"
-        />
-
-        <q-btn 
-          push 
-          color="default" 
-          label="Entrar" 
-          @click="redirect('/auth-ong')"
-          v-if="this.isSignUp() === true && isONG() === true"
-          class="btnEntry"
-        />
       </q-toolbar>
     </q-header>
 
     <q-page-container>
       <router-view />
+
+      
     </q-page-container>
 
     <footer>
@@ -69,15 +35,6 @@ export default {
     }
   },
   methods: {
-    redirect (link) {
-      this.$router.push({path: link})
-    },
-
-    isSignUp() {
-      if (window.location.href === 'http://localhost:8080/signup' || window.location.href === 'http://localhost:8080/signup-ong') return true
-      else return false
-    },
-
     isONG() {
       if (window.location.href === 'http://localhost:8080/auth-ong' || window.location.href === 'http://localhost:8080/signup-ong') return true
       else return false

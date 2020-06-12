@@ -2,7 +2,7 @@
   <q-page class="column items-center justify-evenly">
     <h3>Estamos Quase Lá!</h3>
     <span>Clique No Botão Abaixo para Ativar Sua Conta!</span>
-    <q-btn color="primary" label="Ativar Agora!" @click="handleActive" />
+    <q-btn color="primary" label="Ativar Agora!" @click="handleActive()" />
   </q-page>
 </template>
 
@@ -22,7 +22,11 @@ export default {
 
   methods: {
     async handleActive() {
-      await this.$axios.put(`http://localhost:4040/sessions/ong/active/${this.cnpj}`)
+      await this.$axios.put(`http://localhost:4040/sessions/ong/active`, '', {
+        headers: {
+          'x-target-cnpj': this.cnpj
+        }
+      })
         .then(() => {
           this.$swal({
             icon: 'success',
@@ -36,12 +40,12 @@ export default {
             localStorage.removeItem('@CNPJ');
           }, 3000);
         })
-        .catch(() => {
+        .catch(err => {
           this.$swal({
             icon: 'error',
             title: 'Oops!',
             text: 'Algo Deu Errado',
-            footer: '<small>Tente Novamente!</small>'
+            footer: '<small>'+ err +'</small>'
           });
         });
     }   

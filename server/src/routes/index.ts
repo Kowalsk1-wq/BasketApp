@@ -39,6 +39,12 @@ import DonationController from '../controllers/DonationController';
 /**
 * @Routes
 */
+
+routes.get('/api', (
+    _request: any,
+    response: any
+  ) => response.status(200).json({ connected: true }))
+
 routes.get('/sessions/pf', verifyJWT, ProfileController.listPf);
 routes.post('/sessions/pf', multer(multerConfig).single('file'), ProfileController.createPf);
 routes.post('/sessions/auth/pf', ProfileController.loginPf);

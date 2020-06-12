@@ -44,6 +44,14 @@
         </div>
       </fieldset>  
     </form>
+
+    <q-btn
+      flat
+      label="Cadastre-se Aqui!"
+      color="primary" 
+      @click="redirect('/signup')"
+      class="linkBtn"
+    />
   </q-page>
 </template>
 
@@ -70,6 +78,10 @@ export default {
   },
 
   methods: {
+    redirect (link) {
+      this.$router.push({path: link})
+    },
+
     onSubmit () {
       if (this.accept !== true) {
         this.$swal({
@@ -274,5 +286,10 @@ export default {
       cursor: pointer;
       text-decoration: underline #ddd;
     }
+  }
+
+  .linkBtn {
+    position: absolute;
+    bottom: 85px;
   }
 </style>

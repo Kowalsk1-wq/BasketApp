@@ -41,12 +41,6 @@ export default {
         },
         {
           id: '2',
-          title: 'Status das Doações',
-          icon: 'schedule',
-          caption: 'Verifique os Status das Suas Doações'
-        },
-        {
-          id: '3',
           title: 'Configurações',
           icon: 'settings',
           caption: 'Personalize o seu BasketApp 😉'

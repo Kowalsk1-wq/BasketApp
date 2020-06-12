@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md q-gutter-md justify-evenly">
     <div class="main row itens-center justify-evenly">
-      <h1 class="nothing" v-if="donations.data.length === 0">Nada a Mostrar :(</h1>
+      <h1 class="nothing" v-if="donations.data.length === 0">Nada a Mostrar ☹</h1>
       <div v-if="donations.data.length !== 0" class="q-pa-md row items-center justify-evenly q-gutter-md" style="width: 100%">
         <q-list class="rounded-borders" style="width: 75%; margin-top: 60px">
           <DonationONG

@@ -1,5 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
+    <span class="doador" @click="redirect('/')" >Entrar Como Doador  <q-icon name="arrow_forward_ios" /></span>
     <!-- multistep form -->
     <form id="msform" @submit.prevent="onSubmit" @reset="onReset">
       <!-- fieldsets -->
@@ -17,9 +18,15 @@
           <q-btn label="Limpar" type="reset" color="primary" flat class="q-ml-sm" />
         </div>
       </fieldset>
-      
-      <span @click="redirect('/')" class="ong">Não sou uma ONG?</span>
     </form>
+
+    <q-btn
+      flat
+      label="Cadastre sua ONG Aqui!"
+      color="primary" 
+      @click="redirect('/signup-ong')"
+      class="linkBtn"
+    />
   </q-page>
 </template>
 
@@ -212,19 +219,21 @@ export default {
     color: white;
   }
 
-  .ong {
+  .linkBtn {
     position: absolute;
-    top: 435px;
-    left: 50%;
+    bottom: 85px;
+  }
+
+  .doador {
+    position: fixed;
+    top: 80%;
+    right: 15px;
 
     transform: translate(-50%, -50%);
 
-    font-size: 20px;
-
     &:hover {
       cursor: pointer;
-      text-decoration: underline;
-      font-weight: bold;
+      text-decoration: underline #ddd;
     }
   }
 </style>

@@ -2,13 +2,14 @@
   <q-page class="q-pa-md q-gutter-md justify-evenly">
     <div class="main row itens-center justify-evenly">
       <q-btn class="add" @click="donation = true" color="green" icon="add" label="Nova Doação" />
-
+      <h1 class="nothing" v-if="donations.data.length === 0">Nada a Mostrar ☹</h1>
       <div class="q-pa-md row items-center justify-evenly q-gutter-md" style="width: 100%">
         <q-list class="rounded-borders" style="width: 75%; margin-top: 60px">
           <DonationCard
             v-for="d in donations.data"
             :key="d.titulo"
             v-bind="d"
+            v-on:deleted="loadDonations()"
           />
         </q-list>
       </div>
@@ -21,11 +22,6 @@
 
           <q-card-section class="q-pt-none">
             <form id="msform">
-              <q-input class="input" outlined v-model="protocol" label="Número da Doação">
-                <template v-slot:append>
-                  <q-btn size="10px" round color="primary" @click="generate()" icon="filter_1" title="Gerar Número" />
-                </template>
-              </q-input>
               <q-input
                 label="Título"
                 v-model="title"
@@ -48,33 +44,29 @@
                   class="input"
                 />
               <div class="rowIn">
-                <div class="autocomplete">
-                  <q-input
-                    outlined
-                    type="text"
-                    label="Produto"
-                    v-model="produto"
-                    @input="onChange"
-                    v-on:input="updateValue($event.target.value)"
-                    class="prodIn"
-                  />
-                  <ul
-                    v-show="isOpen"
-                    class="autocomplete-results"
-                  >
-                    <li
-                      v-for="(result, i) in prods"
-                      :key="i"
-                      @click="setResult(result)"
-                      class="autocomplete-result"
-                    >
-                      {{ result }}
-                    </li>
-                  </ul>
-                </div>
+                <q-select
+                  outlined
+                  v-model="produto"
+                  use-input
+                  hide-selected
+                  fill-input
+                  input-debounce="0"
+                  :options="options"
+                  @filter="filterFn"
+                  hint="Nome do Produto"
+                  style="width: 375px; padding-bottom: 32px"
+                >
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        Nenhum Resultado
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
                 <q-input
-                  label="Quantidade"
-                  v-model.number="quantity"
+                  hint="Quantidade"
+                  v-model.number="quantidade"
                   type="number"
                   outlined
                   class="prodSel"
@@ -91,7 +83,7 @@
                     v-for="p in products"
                     :key="p"
                   >
-                    <span><strong>{{ p.descricao }}</strong> - x{{ p.quantity }}</span> 
+                    <span><strong>{{ p.descricao }}</strong> - x{{ p.quantidade }}</span> 
                     <q-btn class="btnDel" round dense flat icon="delete" @click="deltItem(products.indexOf(i))" />
                   </div>
                 </div>
@@ -100,7 +92,7 @@
           </q-card-section>
           <q-card-actions align="right" class="text-primary actions">
             <q-btn flat label="Cancelar" @click="reset()" v-close-popup />
-            <q-btn @click="createPack()" push color="primary" label="Confirmar" />
+            <q-btn @click="createDonation()" push color="primary" label="Confirmar" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -110,6 +102,38 @@
 
 <script>
 import DonationCard from 'components/DonationCard'
+
+const stringOptions = [
+  'Arroz',
+  'Feijão',
+  'Óleo de Soja',
+  'Sal',
+  'Açúcar',
+  'Café',
+  'Molho de Tomate',
+  'Macarrão Espaguete',
+  'Macarrão Parafuso',
+  'Sardinha',
+  'Atum',
+  'Salsicha',
+  'Charque',
+  'Milho',
+  'Ervilha',
+  'Seleta de Legumes',
+  'Farinha de Trigo',
+  'Farinha de Mandioca',
+  'Biscoito Doce',
+  'Biscoito Salgado',
+  'Leite em Pó',
+  'Sabonete',
+  'Creme Dental',
+  'Papel Higiênico',
+  'Sabonete em Pedra',
+  'Detergente Líquido',
+  'Sabão em Barra',
+  'Sabão em Pó'
+]
+
 export default {
   name: 'Donation',
   components: {
@@ -118,46 +142,38 @@ export default {
   data () {
     return {
       donations: [],
-
       token: localStorage.getItem('@accessToken'),
 			donation: false,
-      protocol: null,
       title: null,
       descricao: null,
       quant: 1,
+
       produto: '',
-      
-      quantity: 1,
+      quantidade: 1,
   
       products: [],
-      prods: [
-        'Feijão',
-        'Arroz',
-        'Macarrão'
-      ],
+      options: stringOptions,
       isOpen: false,
     }
   },
   
 	mounted () {
-    setInterval(async () => {
+    this.loadDonations()
+	},
+	
+	methods: {
+    async loadDonations () {
       this.donations = await this.$axios.post('http://localhost:4040/donation/me', '', {
         headers: {
           'x-access-token': this.token
         }
       })
-    }, 100);
-	},
-	
-	methods: {
-    generate() {
-      this.protocol = Math.floor(Math.random() * 1000000).toString()
     },
 
 		addItem () {
 			this.products.push({
         descricao: this.produto,
-        quantity: this.quantity
+        quantidade: this.quantidade
       });
 			this.produto = ''
       this.quantity = 1
@@ -167,27 +183,8 @@ export default {
 			this.products.splice(pos, 1)
     },
 
-    onChange() {
-      this.isOpen = true
-      this.filterResults()
-    },
-
-    filterResults() {
-      this.results = this.items.filter(item => item.toLowerCase().indexOf(this.search.toLowerCase()) > -1)
-    },
-
-    setResult(result) {
-      this.produto = result
-      this.isOpen = false
-    },
-
-    updateValue: function (value) {
-      this.$emit('input', value)
-    },
-
-		createPack () {
+		createDonation () {
 			const data = {
-        numero: this.protocol,
         titulo: this.title,
         descricao: this.descricao,
         quantidade: this.quant,
@@ -214,7 +211,10 @@ export default {
         this.produto = ''
         this.quantity = 1
         this.products = []
+
+        this.loadDonations()
       }).catch(err => {
+        this.donation = false
         this.$swal({
           icon: 'error',
           title: 'Oops...',
@@ -222,12 +222,26 @@ export default {
           footer: '<small>'+ err +'</small>'
         })
       })
-		}
+    },
+    
+    filterFn (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+      })
+    }
 	}
 }
 </script>
 
 <style lang="scss" scoped>
+  .nothing {
+    position: fixed;
+    margin-top: 170px;
+
+    font-size: 45px;
+  }
+
   .itens {
 		margin-top: 5px;
 		.itemTitle {
@@ -237,7 +251,6 @@ export default {
 		}
 	}
   .createPack {
-    overflow: hidden;
     width: 100%;
     max-width: 840px;
     height: 580px;
@@ -277,7 +290,7 @@ export default {
     .actions {
       position: absolute;
       bottom: 0.5px;
-      right: 5px;
+      right: 10px;
     }
   }
   .main {
@@ -290,11 +303,19 @@ export default {
     }
   }
   /*inputs*/
-  #msform .input {
-    border-radius: 3px;
-    margin-bottom: 10px;
-    width: 100%;
-    box-sizing: border-box;
+  #msform {
+    width: 97%;
+    position: absolute;
+    overflow: auto;
+
+    padding-right: 15px;
+
+    .input {
+      border-radius: 3px;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
   }
   /*buttons*/
   #msform .action-button {
@@ -400,7 +421,7 @@ export default {
 
     .prodSel {
       width: 410px;
-      margin-bottom: 15px;
+      padding-bottom: 32px;
     }
   }
 

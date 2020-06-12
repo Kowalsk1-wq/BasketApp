@@ -101,7 +101,6 @@ export default new class DonationController {
     const user: any = jwtdecode(token);
 
     const {
-      numero,
       titulo,
       descricao,
       quantidade,
@@ -132,10 +131,12 @@ export default new class DonationController {
 
     const idDoador = targetDoador?.doador?.id;
 
+    const num = Math.floor(Math.random() * 1000000).toString();
+
     const newDonation = await prisma.doacao.create({
       data: {
         approved: false,
-        numero,
+        numero: num,
         titulo,
         descricao,
         quantidade,
@@ -147,16 +148,16 @@ export default new class DonationController {
 
     await produtos.map(async (p: {
       descricao: string,
-      quantity: number
+      quantidade: number
     }) => {
       await prisma.produto.create({
         data: {
           id: uuidV4(),
           descricao: p.descricao,
-          quantidade: p.quantity,
+          quantidade: p.quantidade,
           doacao: {
             connect: {
-              numero
+              numero: num
             }
           }
         }

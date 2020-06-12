@@ -128,6 +128,7 @@ export default {
               'Sua Doação Foi Removida Com Sucesso.',
               'success'
             )
+            this.$emit('deleted')
           }).catch(err => {
             this.$swal(
               'Oops!',

@@ -39,10 +39,6 @@
         <q-select behavior="dialog" outlined style="margin-bottom: 10px;" v-model="estado" :options="states" label="Estado" />
         <q-input class="input" outlined type="text" v-model="cidade" label="Cidade" />
 
-        <q-separator /><br>
-
-        <h2 class="fs-title">Agora Digite sua Senha!</h2>
-
         <q-input class="input" outlined type="password" v-model="senha" label="Senha" />
         <q-input class="input" outlined type="password" v-model="rSenha" label="Confirme a Senha" />
 
@@ -57,6 +53,14 @@
         <input type="submit" name="submit" class="submit action-button" value="Cadastrar" />
       </fieldset>
     </form>
+
+    <q-btn
+      flat
+      label="Já Sou Usuário!"
+      color="primary" 
+      @click="redirect('/')"
+      class="linkBtn"
+    />
   </q-page>
 </template>
 
@@ -127,6 +131,10 @@ export default {
   methods: {
     onFileSelected(ev) {
       this.selectedFile = ev.target.files[0]
+    },
+
+    redirect (link) {
+      this.$router.push({path: link})
     },
 
     async onSignUp() {
@@ -338,5 +346,10 @@ export default {
   #progressbar li.active:before,  #progressbar li.active:after{
     background: #27AE60;
     color: white;
+  }
+
+  .linkBtn {
+    position: absolute;
+    bottom: 85px;
   }
 </style>

@@ -16,12 +16,7 @@
         <q-input class="input" outlined type="text" v-model="numero" label="Número" />
         <q-select behavior="dialog" outlined style="margin-bottom: 10px;" v-model="estado" :options="states" label="Estado" />
         <q-input class="input" outlined type="text" v-model="cidade" label="Cidade" />
-
-        <q-separator /><br>
-
-        <h2 class="fs-title">Agora Digite sua Senha!</h2>
-
-        <q-input class="input" outlined type="text" v-model="senha" label="Senha" />
+        <q-input class="input" outlined type="password" v-model="senha" label="Senha" />
         <q-input class="input" outlined type="password" v-model="rSenha" label="Confirme a Senha" />
 
         <q-separator /><br>
@@ -35,6 +30,14 @@
         <input type="submit" name="submit" class="submit action-button" value="Cadastrar" />
       </fieldset>
     </form>
+
+    <q-btn
+      flat
+      label="Minha ONG Já Está Cadastrada!"
+      color="primary" 
+      @click="redirect('/auth-ong')"
+      class="linkBtn"
+    />
   </q-page>
 </template>
 
@@ -44,19 +47,19 @@ export default {
   components: {},
   data() {
     return {
-      razao_social: null,
-      cnpj: null,
-      email: null,
-      senha: null,
-      rSenha: null,
-      telefone: null,
-      cep: null,
-      logradouro: null,
-      bairro: null,
-      complemento: null,
-      cidade: null,
-      estado: null,
-      numero: null,
+      razao_social: '',
+      cnpj: '',
+      email: '',
+      senha: '',
+      rSenha: '',
+      telefone: '',
+      cep: '',
+      logradouro: '',
+      bairro: '',
+      complemento: '',
+      cidade: '',
+      estado: '',
+      numero: '',
 
       states: [
         "Acre",
@@ -141,6 +144,10 @@ export default {
                 });
               })
       }
+    },
+
+    redirect (link) {
+      this.$router.push({ path: link });
     }
   }
 }
@@ -267,5 +274,10 @@ export default {
   #progressbar li.active:before,  #progressbar li.active:after{
     background: #27AE60;
     color: white;
+  }
+
+  .linkBtn {
+    position: absolute;
+    bottom: 85px;
   }
 </style>

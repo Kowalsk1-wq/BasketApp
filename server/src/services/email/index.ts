@@ -7,7 +7,7 @@ const send = async (to: any, subject: any, body: any) => {
     to,
     from: 'limabrot879@gmail.com',
     subject: 'Bem-Vindo(a) ao BasketApp,',
-    text: 'Nossa Plataforma Gratuita de Doações de Cestas Básicas',
+    text: 'Nossa Plataforma Gratuita de Doações Comunitarias',
     html: body
   })
 }

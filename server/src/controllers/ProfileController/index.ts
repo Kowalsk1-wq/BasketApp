@@ -573,11 +573,11 @@ export default new class SessionController {
   }
 
   async activeONG(request: any, response: any) {
-    const { ong_cnpj } = request.headers;
+    const cnpj = request.headers['x-target-cnpj'];
 
     const targetONG = await prisma.ong.findOne({
       where: { 
-        cnpj: ong_cnpj 
+        cnpj
       }
     });
 
@@ -589,7 +589,7 @@ export default new class SessionController {
     } else {
       const updateONG = await prisma.ong.update({
         where: { 
-          cnpj: ong_cnpj 
+          cnpj 
         },
         data: {
           active: true

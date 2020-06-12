@@ -91,12 +91,6 @@ export default {
         },
         {
           id: '3',
-          title: 'Status das Doações',
-          icon: 'schedule',
-          link: '/requests'
-        },
-        {
-          id: '4',
           title: 'Configurações',
           icon: 'settings',
           link: '/settings'
